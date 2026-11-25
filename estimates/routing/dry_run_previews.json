@@ -1,0 +1,503 @@
+{
+  "previews": [
+    {
+      "key": "jev",
+      "model_id": "typesafe/jev-1.14",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "typesafe/jev-1.14",
+        "state": "play it again please",
+        "questions": {
+          "route": {
+            "type": "choice",
+            "instructions": "Route this user request to the queue that should handle it. Use the description of each option as the definition of that queue.",
+            "criteria": {
+              "Calendar": "Calendar and reminders: events, alarms, and personal to-do or shopping lists.",
+              "SmartHome": "Smart home: lights, plugs, appliances, and other household devices.",
+              "Media": "Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.",
+              "Orders": "Orders and transport: takeaway food, travel tickets, and ride bookings.",
+              "Info": "Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.",
+              "Email": "Email and contacts: reading or sending email, and looking up or adding contacts."
+            }
+          }
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "msdecision",
+      "model_id": "microsoft/microsoft-decision-1.1",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "microsoft/microsoft-decision-1.1",
+        "state": "play it again please",
+        "questions": {
+          "route": {
+            "type": "choice",
+            "instructions": "Route this user request to the queue that should handle it. Use the description of each option as the definition of that queue.",
+            "criteria": {
+              "Calendar": "Calendar and reminders: events, alarms, and personal to-do or shopping lists.",
+              "SmartHome": "Smart home: lights, plugs, appliances, and other household devices.",
+              "Media": "Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.",
+              "Orders": "Orders and transport: takeaway food, travel tickets, and ride bookings.",
+              "Info": "Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.",
+              "Email": "Email and contacts: reading or sending email, and looking up or adding contacts."
+            }
+          }
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "pplx-flash",
+      "model_id": "perplexity/pplx-decider-flash-v1.3:free",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "perplexity/pplx-decider-flash-v1.3:free",
+        "state": "play it again please",
+        "questions": {
+          "route": {
+            "type": "choice",
+            "instructions": "Route this user request to the queue that should handle it. Use the description of each option as the definition of that queue.",
+            "criteria": {
+              "Calendar": "Calendar and reminders: events, alarms, and personal to-do or shopping lists.",
+              "SmartHome": "Smart home: lights, plugs, appliances, and other household devices.",
+              "Media": "Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.",
+              "Orders": "Orders and transport: takeaway food, travel tickets, and ride bookings.",
+              "Info": "Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.",
+              "Email": "Email and contacts: reading or sending email, and looking up or adding contacts."
+            }
+          }
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "pplx-full",
+      "model_id": "perplexity/pplx-decider-v1.3:free",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "perplexity/pplx-decider-v1.3:free",
+        "state": "play it again please",
+        "questions": {
+          "route": {
+            "type": "choice",
+            "instructions": "Route this user request to the queue that should handle it. Use the description of each option as the definition of that queue.",
+            "criteria": {
+              "Calendar": "Calendar and reminders: events, alarms, and personal to-do or shopping lists.",
+              "SmartHome": "Smart home: lights, plugs, appliances, and other household devices.",
+              "Media": "Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.",
+              "Orders": "Orders and transport: takeaway food, travel tickets, and ride bookings.",
+              "Info": "Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.",
+              "Email": "Email and contacts: reading or sending email, and looking up or adding contacts."
+            }
+          }
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "gemini",
+      "model_id": "google/gemini-4-hydrogen",
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "google/gemini-4-hydrogen",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You route user requests to one queue. Reply with a JSON object that has a single field, label, which must be exactly one of: Calendar, SmartHome, Media, Orders, Info, Email. Use these descriptions as the definition of each queue:\n- Calendar: Calendar and reminders: events, alarms, and personal to-do or shopping lists.\n- SmartHome: Smart home: lights, plugs, appliances, and other household devices.\n- Media: Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.\n- Orders: Orders and transport: takeaway food, travel tickets, and ride bookings.\n- Info: Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.\n- Email: Email and contacts: reading or sending email, and looking up or adding contacts. Do not include explanations or a self-reported confidence score."
+          },
+          {
+            "role": "user",
+            "content": "Request:\nplay it again please"
+          }
+        ],
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "routing_label",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "enum": [
+                    "Calendar",
+                    "SmartHome",
+                    "Media",
+                    "Orders",
+                    "Info",
+                    "Email"
+                  ]
+                }
+              },
+              "required": [
+                "label"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "max_tokens": 4096,
+        "temperature": 0
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "gpt-sol",
+      "model_id": "openai/gpt-6.2-sol",
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "openai/gpt-6.2-sol",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You route user requests to one queue. Reply with a JSON object that has a single field, label, which must be exactly one of: Calendar, SmartHome, Media, Orders, Info, Email. Use these descriptions as the definition of each queue:\n- Calendar: Calendar and reminders: events, alarms, and personal to-do or shopping lists.\n- SmartHome: Smart home: lights, plugs, appliances, and other household devices.\n- Media: Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.\n- Orders: Orders and transport: takeaway food, travel tickets, and ride bookings.\n- Info: Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.\n- Email: Email and contacts: reading or sending email, and looking up or adding contacts. Do not include explanations or a self-reported confidence score."
+          },
+          {
+            "role": "user",
+            "content": "Request:\nplay it again please"
+          }
+        ],
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "routing_label",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "enum": [
+                    "Calendar",
+                    "SmartHome",
+                    "Media",
+                    "Orders",
+                    "Info",
+                    "Email"
+                  ]
+                }
+              },
+              "required": [
+                "label"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "max_tokens": 4096,
+        "temperature": 0
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "gpt-luna",
+      "model_id": "openai/gpt-6-luna",
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "openai/gpt-6-luna",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You route user requests to one queue. Reply with a JSON object that has a single field, label, which must be exactly one of: Calendar, SmartHome, Media, Orders, Info, Email. Use these descriptions as the definition of each queue:\n- Calendar: Calendar and reminders: events, alarms, and personal to-do or shopping lists.\n- SmartHome: Smart home: lights, plugs, appliances, and other household devices.\n- Media: Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.\n- Orders: Orders and transport: takeaway food, travel tickets, and ride bookings.\n- Info: Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.\n- Email: Email and contacts: reading or sending email, and looking up or adding contacts. Do not include explanations or a self-reported confidence score."
+          },
+          {
+            "role": "user",
+            "content": "Request:\nplay it again please"
+          }
+        ],
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "routing_label",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "enum": [
+                    "Calendar",
+                    "SmartHome",
+                    "Media",
+                    "Orders",
+                    "Info",
+                    "Email"
+                  ]
+                }
+              },
+              "required": [
+                "label"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "max_tokens": 64,
+        "temperature": 0,
+        "reasoning_effort": "none",
+        "reasoning": {
+          "effort": "none",
+          "enabled": false
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "qwen",
+      "model_id": "qwen/qwen4-max",
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "qwen/qwen4-max",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You route user requests to one queue. Reply with a JSON object that has a single field, label, which must be exactly one of: Calendar, SmartHome, Media, Orders, Info, Email. Use these descriptions as the definition of each queue:\n- Calendar: Calendar and reminders: events, alarms, and personal to-do or shopping lists.\n- SmartHome: Smart home: lights, plugs, appliances, and other household devices.\n- Media: Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.\n- Orders: Orders and transport: takeaway food, travel tickets, and ride bookings.\n- Info: Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.\n- Email: Email and contacts: reading or sending email, and looking up or adding contacts. Do not include explanations or a self-reported confidence score."
+          },
+          {
+            "role": "user",
+            "content": "Request:\nplay it again please"
+          }
+        ],
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "routing_label",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "enum": [
+                    "Calendar",
+                    "SmartHome",
+                    "Media",
+                    "Orders",
+                    "Info",
+                    "Email"
+                  ]
+                }
+              },
+              "required": [
+                "label"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "max_tokens": 64,
+        "temperature": 0,
+        "reasoning_effort": "none",
+        "reasoning": {
+          "effort": "none",
+          "enabled": false
+        },
+        "logprobs": true,
+        "top_logprobs": 5
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "deepseek",
+      "model_id": "deepseek/deepseek-v4.1-flash-1017",
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "deepseek/deepseek-v4.1-flash-1017",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You route user requests to one queue. Reply with a JSON object that has a single field, label, which must be exactly one of: Calendar, SmartHome, Media, Orders, Info, Email. Use these descriptions as the definition of each queue:\n- Calendar: Calendar and reminders: events, alarms, and personal to-do or shopping lists.\n- SmartHome: Smart home: lights, plugs, appliances, and other household devices.\n- Media: Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.\n- Orders: Orders and transport: takeaway food, travel tickets, and ride bookings.\n- Info: Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.\n- Email: Email and contacts: reading or sending email, and looking up or adding contacts. Do not include explanations or a self-reported confidence score."
+          },
+          {
+            "role": "user",
+            "content": "Request:\nplay it again please"
+          }
+        ],
+        "response_format": {
+          "type": "json_schema",
+          "json_schema": {
+            "name": "routing_label",
+            "strict": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "enum": [
+                    "Calendar",
+                    "SmartHome",
+                    "Media",
+                    "Orders",
+                    "Info",
+                    "Email"
+                  ]
+                }
+              },
+              "required": [
+                "label"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "max_tokens": 64,
+        "temperature": 0,
+        "reasoning_effort": "none",
+        "reasoning": {
+          "effort": "none",
+          "enabled": false
+        },
+        "logprobs": true,
+        "top_logprobs": 5
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "sarvam",
+      "model_id": "sarvam-prism",
+      "endpoint": "https://api.sarvam.ai/v2/systemone",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "sarvam-prism",
+        "state": "play it again please",
+        "questions": {
+          "route": {
+            "type": "choice",
+            "instructions": "Route this user request to the queue that should handle it. Use the description of each option as the definition of that queue.",
+            "criteria": {
+              "Calendar": "Calendar and reminders: events, alarms, and personal to-do or shopping lists.",
+              "SmartHome": "Smart home: lights, plugs, appliances, and other household devices.",
+              "Media": "Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.",
+              "Orders": "Orders and transport: takeaway food, travel tickets, and ride bookings.",
+              "Info": "Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.",
+              "Email": "Email and contacts: reading or sending email, and looking up or adding contacts."
+            }
+          }
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "bison",
+      "model_id": "baseten/bison-1",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "baseten/bison-1",
+        "state": "play it again please",
+        "questions": {
+          "route": {
+            "type": "choice",
+            "instructions": "Route this user request to the queue that should handle it. Use the description of each option as the definition of that queue.",
+            "criteria": {
+              "Calendar": "Calendar and reminders: events, alarms, and personal to-do or shopping lists.",
+              "SmartHome": "Smart home: lights, plugs, appliances, and other household devices.",
+              "Media": "Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.",
+              "Orders": "Orders and transport: takeaway food, travel tickets, and ride bookings.",
+              "Info": "Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.",
+              "Email": "Email and contacts: reading or sending email, and looking up or adding contacts."
+            }
+          }
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    },
+    {
+      "key": "groundhog",
+      "model_id": "baseten/groundhog-1",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "baseten/groundhog-1",
+        "state": "play it again please",
+        "questions": {
+          "route": {
+            "type": "choice",
+            "instructions": "Route this user request to the queue that should handle it. Use the description of each option as the definition of that queue.",
+            "criteria": {
+              "Calendar": "Calendar and reminders: events, alarms, and personal to-do or shopping lists.",
+              "SmartHome": "Smart home: lights, plugs, appliances, and other household devices.",
+              "Media": "Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.",
+              "Orders": "Orders and transport: takeaway food, travel tickets, and ride bookings.",
+              "Info": "Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.",
+              "Email": "Email and contacts: reading or sending email, and looking up or adding contacts."
+            }
+          }
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 164,
+        "chat_prompt_tokens": 267,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 4
+      }
+    }
+  ]
+}

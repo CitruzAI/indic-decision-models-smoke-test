@@ -7,3 +7,6 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# First request-routing run, kept locally for reference, not part of the public results.
+results/routing-v1-discarded/

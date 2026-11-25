@@ -1,0 +1,678 @@
+{
+  "task": "routing",
+  "started_at_ist": "2026-11-25 14:34:17 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 15:36:51 IST (Asia/Calcutta)",
+  "max_usd": "2.00000000",
+  "spent_usd_cumulative_openrouter": "0.68621082",
+  "max_inr_sarvam": "50.00000000",
+  "models": [
+    {
+      "status": "ran",
+      "model_id": "perplexity/pplx-decider-flash-v1.3:free",
+      "key": "pplx-flash",
+      "returned_model_ids": [
+        "perplexity/pplx-decider-flash-v1.3-20261112"
+      ],
+      "started_at_ist": "2026-11-25 14:34:17 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:34:55 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.00000000",
+      "spent_usd_cumulative_after": "0.00000000",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.975,
+          "hi": 0.9625,
+          "ta": 0.9
+        },
+        "drops": {
+          "hi_minus_en": -0.012499999999999956,
+          "ta_minus_en": -0.07499999999999996
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 145.640471500883,
+          "p95_ms": 194.4618321492269,
+          "min_ms": 96.10946400061948,
+          "max_ms": 1209.709765000298,
+          "mean_ms": 154.9948596790879,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.0,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": {
+          "n": 240,
+          "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+          "brier": 0.06960315178091667,
+          "accuracy_at_p_0_9": {
+            "threshold": 0.9,
+            "ge_threshold": {
+              "n": 211,
+              "correct": 210,
+              "accuracy": 0.995260663507109
+            },
+            "lt_threshold": {
+              "n": 29,
+              "correct": 17,
+              "accuracy": 0.5862068965517241
+            }
+          }
+        }
+      },
+      "rows_path": "results/pplx-flash.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "perplexity/pplx-decider-v1.3:free",
+      "key": "pplx-full",
+      "returned_model_ids": [
+        "perplexity/pplx-decider-v1.3-20261112"
+      ],
+      "started_at_ist": "2026-11-25 14:34:55 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:35:53 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.00000000",
+      "spent_usd_cumulative_after": "0.00000000",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.9875,
+          "hi": 1.0,
+          "ta": 0.95
+        },
+        "drops": {
+          "hi_minus_en": 0.012499999999999956,
+          "ta_minus_en": -0.03750000000000009
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 239.73601650050114,
+          "p95_ms": 278.8066533502388,
+          "min_ms": 182.72289800006547,
+          "max_ms": 473.1612119994679,
+          "mean_ms": 239.15822062080375,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.0,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": {
+          "n": 240,
+          "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+          "brier": 0.03851966763199788,
+          "accuracy_at_p_0_9": {
+            "threshold": 0.9,
+            "ge_threshold": {
+              "n": 216,
+              "correct": 215,
+              "accuracy": 0.9953703703703703
+            },
+            "lt_threshold": {
+              "n": 24,
+              "correct": 20,
+              "accuracy": 0.8333333333333334
+            }
+          }
+        }
+      },
+      "rows_path": "results/pplx-full.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "baseten/groundhog-1",
+      "key": "groundhog",
+      "returned_model_ids": [
+        "baseten/groundhog-1-20261120"
+      ],
+      "started_at_ist": "2026-11-25 14:35:53 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:36:51 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.00208065",
+      "spent_usd_cumulative_after": "0.00208065",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.975,
+          "hi": 0.95,
+          "ta": 0.95
+        },
+        "drops": {
+          "hi_minus_en": -0.025000000000000022,
+          "ta_minus_en": -0.025000000000000022
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 213.73009550006827,
+          "p95_ms": 333.7229522005144,
+          "min_ms": 159.5791689996986,
+          "max_ms": 1555.4424020010629,
+          "mean_ms": 240.73500972083366,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.002080645,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": {
+          "n": 240,
+          "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+          "brier": 0.06946293352037941,
+          "accuracy_at_p_0_9": {
+            "threshold": 0.9,
+            "ge_threshold": {
+              "n": 192,
+              "correct": 192,
+              "accuracy": 1.0
+            },
+            "lt_threshold": {
+              "n": 48,
+              "correct": 38,
+              "accuracy": 0.7916666666666666
+            }
+          }
+        }
+      },
+      "rows_path": "results/groundhog.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "typesafe/jev-1.14",
+      "key": "jev",
+      "returned_model_ids": [
+        "typesafe/jev-1.14-20261014"
+      ],
+      "started_at_ist": "2026-11-25 14:36:51 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:37:41 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.00499355",
+      "spent_usd_cumulative_after": "0.00707419",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.95,
+          "hi": 0.925,
+          "ta": 0.9
+        },
+        "drops": {
+          "hi_minus_en": -0.02499999999999991,
+          "ta_minus_en": -0.04999999999999993
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 138.18849050130666,
+          "p95_ms": 210.62718120010675,
+          "min_ms": 67.62502799938375,
+          "max_ms": 6739.956333000009,
+          "mean_ms": 206.04054282500024,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.004993548,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": {
+          "n": 240,
+          "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+          "brier": 0.08823333333333336,
+          "accuracy_at_p_0_9": {
+            "threshold": 0.9,
+            "ge_threshold": {
+              "n": 199,
+              "correct": 196,
+              "accuracy": 0.9849246231155779
+            },
+            "lt_threshold": {
+              "n": 41,
+              "correct": 26,
+              "accuracy": 0.6341463414634146
+            }
+          }
+        }
+      },
+      "rows_path": "results/jev.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "microsoft/microsoft-decision-1.1",
+      "key": "msdecision",
+      "returned_model_ids": [
+        "microsoft/microsoft-decision-1.1-20261117"
+      ],
+      "started_at_ist": "2026-11-25 14:37:41 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:38:57 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.00175085",
+      "spent_usd_cumulative_after": "0.00882505",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.9875,
+          "hi": 0.95,
+          "ta": 0.95
+        },
+        "drops": {
+          "hi_minus_en": -0.03750000000000009,
+          "ta_minus_en": -0.03750000000000009
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 251.55948200062994,
+          "p95_ms": 398.52136244880955,
+          "min_ms": 188.68839599963394,
+          "max_ms": 5479.378205000103,
+          "mean_ms": 318.3093685666866,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.001750854,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": {
+          "n": 240,
+          "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+          "brier": 0.057600702260271135,
+          "accuracy_at_p_0_9": {
+            "threshold": 0.9,
+            "ge_threshold": {
+              "n": 207,
+              "correct": 206,
+              "accuracy": 0.9951690821256038
+            },
+            "lt_threshold": {
+              "n": 33,
+              "correct": 25,
+              "accuracy": 0.7575757575757576
+            }
+          }
+        }
+      },
+      "rows_path": "results/msdecision.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "deepseek/deepseek-v4.1-flash-1017",
+      "key": "deepseek",
+      "returned_model_ids": [
+        "deepseek/deepseek-v4.1-flash-1017"
+      ],
+      "started_at_ist": "2026-11-25 14:38:57 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:41:10 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.00649984",
+      "spent_usd_cumulative_after": "0.01532489",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.9375,
+          "hi": 0.9375,
+          "ta": 0.925
+        },
+        "drops": {
+          "hi_minus_en": 0.0,
+          "ta_minus_en": -0.012499999999999956
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 424.89098900023237,
+          "p95_ms": 986.2372469999173,
+          "min_ms": 172.09939300119004,
+          "max_ms": 6151.043313999253,
+          "mean_ms": 549.2478815917366,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.0064998383,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": null
+      },
+      "rows_path": "results/deepseek.jsonl"
+    },
+    {
+      "status": "ran_with_errors",
+      "model_id": "baseten/bison-1",
+      "key": "bison",
+      "returned_model_ids": [
+        "baseten/bison-1-20261120"
+      ],
+      "started_at_ist": "2026-11-25 14:41:10 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:49:58 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 239,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.00591970",
+      "spent_usd_cumulative_after": "0.02124459",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 239,
+        "accuracy_by_language": {
+          "en": 0.9875,
+          "hi": 0.9746835443037974,
+          "ta": 0.9375
+        },
+        "drops": {
+          "hi_minus_en": -0.0128164556962026,
+          "ta_minus_en": -0.050000000000000044
+        },
+        "latency": {
+          "n": 239,
+          "p50_ms": 216.03205000064918,
+          "p95_ms": 272.65850819967454,
+          "min_ms": 164.5728669991513,
+          "max_ms": 697.4988509991817,
+          "mean_ms": 219.41263017572177,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 239,
+          "total_usd": 0.0059197,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": {
+          "n": 239,
+          "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+          "brier": 0.054799514993130315,
+          "accuracy_at_p_0_9": {
+            "threshold": 0.9,
+            "ge_threshold": {
+              "n": 201,
+              "correct": 200,
+              "accuracy": 0.9950248756218906
+            },
+            "lt_threshold": {
+              "n": 38,
+              "correct": 31,
+              "accuracy": 0.8157894736842105
+            }
+          }
+        }
+      },
+      "rows_path": "results/bison.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "openai/gpt-6-luna",
+      "key": "gpt-luna",
+      "returned_model_ids": [
+        "openai/gpt-6-luna"
+      ],
+      "started_at_ist": "2026-11-25 14:49:58 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:53:31 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.00749920",
+      "spent_usd_cumulative_after": "0.02874379",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.9375,
+          "hi": 0.9375,
+          "ta": 0.8375
+        },
+        "drops": {
+          "hi_minus_en": 0.0,
+          "ta_minus_en": -0.09999999999999998
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 767.2891654992782,
+          "p95_ms": 1335.1301152997617,
+          "min_ms": 552.2138020005514,
+          "max_ms": 9216.238712000631,
+          "mean_ms": 883.358996066689,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.0074992,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": null
+      },
+      "rows_path": "results/gpt-luna.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "qwen/qwen4-max",
+      "key": "qwen",
+      "returned_model_ids": [
+        "qwen/qwen4-max"
+      ],
+      "started_at_ist": "2026-11-25 14:53:31 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 14:59:46 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.03227654",
+      "spent_usd_cumulative_after": "0.06102032",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.9375,
+          "hi": 0.925,
+          "ta": 0.9125
+        },
+        "drops": {
+          "hi_minus_en": -0.012499999999999956,
+          "ta_minus_en": -0.025000000000000022
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 1507.4765845010916,
+          "p95_ms": 2092.1986057496715,
+          "min_ms": 1050.275823999982,
+          "max_ms": 3215.01069399892,
+          "mean_ms": 1561.8031259209145,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.032276535,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": null
+      },
+      "rows_path": "results/qwen.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "google/gemini-4-hydrogen",
+      "key": "gemini",
+      "returned_model_ids": [
+        "google/gemini-4-hydrogen"
+      ],
+      "started_at_ist": "2026-11-25 14:59:46 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 15:10:00 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.46048650",
+      "spent_usd_cumulative_after": "0.52150682",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.975,
+          "hi": 0.95,
+          "ta": 0.9625
+        },
+        "drops": {
+          "hi_minus_en": -0.025000000000000022,
+          "ta_minus_en": -0.012499999999999956
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 1729.6428414992988,
+          "p95_ms": 6989.022435900806,
+          "min_ms": 1028.8745489997382,
+          "max_ms": 14152.862496001035,
+          "mean_ms": 2454.6000745584024,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.4604865,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": null
+      },
+      "rows_path": "results/gemini.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "openai/gpt-6.2-sol",
+      "key": "gpt-sol",
+      "returned_model_ids": [
+        "openai/gpt-6.2-sol"
+      ],
+      "started_at_ist": "2026-11-25 15:10:00 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 15:15:52 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_usd_this_model": "0.16470400",
+      "spent_usd_cumulative_after": "0.68621082",
+      "max_usd": "2.00000000",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.925,
+          "hi": 0.9125,
+          "ta": 0.9
+        },
+        "drops": {
+          "hi_minus_en": -0.012500000000000067,
+          "ta_minus_en": -0.025000000000000022
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 1331.9850114994551,
+          "p95_ms": 2547.5483149497436,
+          "min_ms": 1050.871298997663,
+          "max_ms": 4599.9835719994735,
+          "mean_ms": 1465.7423530624253,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": {
+          "n": 240,
+          "total_usd": 0.164704,
+          "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+        },
+        "calibration": null
+      },
+      "rows_path": "results/gpt-sol.jsonl"
+    },
+    {
+      "status": "ran",
+      "model_id": "sarvam-prism",
+      "key": "sarvam",
+      "currency": "INR",
+      "returned_model_ids": [
+        "sarvam-prism"
+      ],
+      "started_at_ist": "2026-11-25 15:15:52 IST (Asia/Calcutta)",
+      "finished_at_ist": "2026-11-25 15:36:51 IST (Asia/Calcutta)",
+      "n_planned": 240,
+      "n_recorded": 240,
+      "n_scored": 240,
+      "partial": false,
+      "abort_reason": null,
+      "spent_inr": "0.19332800",
+      "max_inr": "50.00000000",
+      "cost_note": "Listed rate ₹4/1M input applied to usage prompt tokens. Outside the OpenRouter $2 cap.",
+      "metrics": {
+        "n_rows": 240,
+        "accuracy_by_language": {
+          "en": 0.9625,
+          "hi": 0.95,
+          "ta": 0.9375
+        },
+        "drops": {
+          "hi_minus_en": -0.012500000000000067,
+          "ta_minus_en": -0.025000000000000022
+        },
+        "latency": {
+          "n": 240,
+          "p50_ms": 4971.7421409986855,
+          "p95_ms": 9791.632366901647,
+          "min_ms": 1061.1069189981208,
+          "max_ms": 16980.40851300175,
+          "mean_ms": 5243.21329113324,
+          "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+        },
+        "cost": null,
+        "calibration": {
+          "n": 240,
+          "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+          "brier": 0.08696607855010535,
+          "accuracy_at_p_0_9": {
+            "threshold": 0.9,
+            "ge_threshold": {
+              "n": 205,
+              "correct": 199,
+              "accuracy": 0.9707317073170731
+            },
+            "lt_threshold": {
+              "n": 35,
+              "correct": 29,
+              "accuracy": 0.8285714285714286
+            }
+          }
+        }
+      },
+      "rows_path": "results/sarvam.jsonl"
+    }
+  ]
+}

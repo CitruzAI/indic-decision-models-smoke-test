@@ -13,27 +13,28 @@ from typing import Any
 
 from indic_smoke.config import ModelSpec
 from indic_smoke.http import env_key, request_json
-from indic_smoke.prompts import LABELS, decisions_payload
+from indic_smoke.task import SENTIMENT, TaskSpec
 
 INR_PER_1M_INPUT = Decimal("4")
 
 
-def build_request(spec: ModelSpec, text: str) -> dict[str, Any]:
-    return {"model": spec.model_id, **decisions_payload(text)}
+def build_request(spec: ModelSpec, text: str, task: TaskSpec = SENTIMENT) -> dict[str, Any]:
+    return {"model": spec.model_id, **task.decisions_payload(text)}
 
 
-def parse_answer(payload: dict[str, Any]) -> dict[str, Any]:
+def parse_answer(payload: dict[str, Any], task: TaskSpec = SENTIMENT) -> dict[str, Any]:
     answers = payload.get("answers") or {}
-    answer = answers.get("sentiment") or {}
+    answer = answers.get(task.question_name) or {}
+    labels = task.labels
     if answer.get("type") == "refusal":
         return {"pred": None, "probs": None, "error": "refusal", "raw_type": "refusal"}
     probs = answer.get("probabilities") or {}
     pred = answer.get("choice")
-    if pred not in LABELS and probs:
+    if pred not in labels and probs:
         pred = max(probs, key=probs.get)
-    if probs and not all(label in probs for label in LABELS):
+    if probs and not all(label in probs for label in labels):
         return {"pred": pred, "probs": None, "error": "missing probabilities"}
-    return {"pred": pred, "probs": {k: float(probs[k]) for k in LABELS} if probs else None}
+    return {"pred": pred, "probs": {k: float(probs[k]) for k in labels} if probs else None}
 
 
 def _http_error(status: int, payload: dict[str, Any] | None) -> str:
@@ -67,7 +68,7 @@ def cost_inr_from_usage(usage: dict[str, Any] | None) -> tuple[float | None, str
     return float(cost), "usage_tokens_x_listed_inr_4_per_1m"
 
 
-def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
+def infer(spec: ModelSpec, text: str, task: TaskSpec = SENTIMENT) -> dict[str, Any]:
     key = env_key(spec.auth_env)
     if not key:
         raise RuntimeError(f"{spec.auth_env} is not set in the current environment")
@@ -76,7 +77,7 @@ def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
         "POST",
         spec.endpoint,
         headers={"api-subscription-key": key, "Authorization": f"Bearer {key}"},
-        body=build_request(spec, text),
+        body=build_request(spec, text, task),
         timeout=120.0,
     )
     latency_ms = (time.perf_counter() - t0) * 1000.0
@@ -100,6 +101,6 @@ def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
             }
         )
         return base
-    parsed = parse_answer(payload)
+    parsed = parse_answer(payload, task)
     parsed.update(base)
     return parsed

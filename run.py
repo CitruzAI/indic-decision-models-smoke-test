@@ -27,7 +27,7 @@ from indic_smoke.config import ModelSpec, by_key, registry
 from indic_smoke.estimate import estimate_all, load_reviews, money
 from indic_smoke.http import env_key
 from indic_smoke.metrics import summarize
-from indic_smoke.prompts import LABELS
+from indic_smoke.task import SENTIMENT, TaskSpec, by_name
 from indic_smoke.tokenize_approx import token_report
 
 DATA_PATH = ROOT / "data" / "reviews.jsonl"
@@ -133,13 +133,13 @@ def fallback_cost(spec: ModelSpec, usage: dict[str, Any] | None) -> tuple[Decima
     return cost, "tokens_x_list_price"
 
 
-def dry_run(reviews: list[dict[str, Any]], specs: list[ModelSpec], out_dir: Path) -> dict[str, Any]:
+def dry_run(reviews: list[dict[str, Any]], specs: list[ModelSpec], out_dir: Path, task: TaskSpec = SENTIMENT) -> dict[str, Any]:
     previews = []
     for spec in specs:
         sample_text = reviews[0]["text_en"]
         adapter = ADAPTERS[(spec.provider, spec.family)]
-        body = adapter.build_request(spec, sample_text)
-        report = token_report(sample_text)
+        body = adapter.build_request(spec, sample_text, task)
+        report = token_report(sample_text, task)
         previews.append(
             {
                 "key": spec.key,
@@ -150,18 +150,18 @@ def dry_run(reviews: list[dict[str, Any]], specs: list[ModelSpec], out_dir: Path
                 "sample_token_approx_en": report,
             }
         )
-    estimate = estimate_all(reviews)
+    estimate = estimate_all(reviews, task)
     write_json(out_dir / "cost_estimate.json", estimate)
     write_json(out_dir / "dry_run_previews.json", {"previews": previews})
     return {"estimate": estimate, "previews": previews}
 
 
-def _call_with_retries(adapter: Any, spec: ModelSpec, text: str, *, max_retries: int) -> dict[str, Any]:
+def _call_with_retries(adapter: Any, spec: ModelSpec, text: str, *, task: TaskSpec, max_retries: int) -> dict[str, Any]:
     result: dict[str, Any] | None = None
     attempts = max_retries + 1
     for attempt in range(1, attempts + 1):
         try:
-            result = adapter.infer(spec, text)
+            result = adapter.infer(spec, text, task)
         except Exception as exc:  # noqa: BLE001 — transport bugs must not kill the run
             result = {
                 "pred": None,
@@ -191,6 +191,7 @@ def live_run_model(
     spent: Decimal,
     out_dir: Path,
     estimates: dict[str, Any],
+    task: TaskSpec = SENTIMENT,
 ) -> tuple[dict[str, Any], Decimal]:
     """Run one OpenRouter model under a shared cumulative USD cap."""
     reason = blocked_reason(spec)
@@ -283,7 +284,7 @@ def live_run_model(
             )
             break
 
-        result = _call_with_retries(adapter, spec, row[field], max_retries=4)
+        result = _call_with_retries(adapter, spec, row[field], task=task, max_retries=4)
         usage = result.get("usage") if isinstance(result.get("usage"), dict) else None
         cost, cost_source = fallback_cost(spec, usage)
         if result.get("cost_usd") is not None:
@@ -331,7 +332,7 @@ def live_run_model(
 
     write_jsonl(jsonl_path, rows)
     scored = [r for r in rows if r.get("pred") is not None and not r.get("error")]
-    metrics = summarize(scored, LABELS) if scored else None
+    metrics = summarize(scored, task.labels) if scored else None
     n_planned = len(items)
     n_done = len(rows)
     n_scored = len(scored)
@@ -370,6 +371,7 @@ def live_run_sarvam(
     spec: ModelSpec,
     max_inr: Decimal,
     out_dir: Path,
+    task: TaskSpec = SENTIMENT,
 ) -> dict[str, Any]:
     """Run Sarvam Prism under a separate INR cap. Outside the OpenRouter USD total."""
     reason = blocked_reason(spec)
@@ -414,7 +416,7 @@ def live_run_sarvam(
             break
 
         # At most a couple of retries, and only on 429 / 5xx.
-        result = _call_with_retries(adapter, spec, row[field], max_retries=2)
+        result = _call_with_retries(adapter, spec, row[field], task=task, max_retries=2)
         usage = result.get("usage") if isinstance(result.get("usage"), dict) else None
         cost = None
         cost_source = "missing"
@@ -466,7 +468,7 @@ def live_run_sarvam(
 
     write_jsonl(jsonl_path, rows)
     scored = [r for r in rows if r.get("pred") is not None and not r.get("error")]
-    metrics = summarize(scored, LABELS) if scored else None
+    metrics = summarize(scored, task.labels) if scored else None
     n_planned = len(items)
     n_done = len(rows)
     if aborted and n_done < n_planned:
@@ -644,7 +646,14 @@ def format_results_table(summaries: list[dict[str, Any]], specs_by_key: dict[str
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--data", type=Path, default=DATA_PATH)
+    parser.add_argument(
+        "--task",
+        choices=("sentiment", "routing"),
+        default="sentiment",
+        help="sentiment (IndicSentiment reviews) or routing (Amazon MASSIVE support queues).",
+    )
+    parser.add_argument("--data", type=Path, default=None, help="JSONL of items. Defaults from --task.")
+    parser.add_argument("--results-dir", type=Path, default=None, help="Output directory. Defaults from --task.")
     parser.add_argument("--dry-run", action="store_true", help="No inference POSTs. Default if --live is absent.")
     parser.add_argument("--estimate", action="store_true", help="Write the cost estimate (implied by --dry-run).")
     parser.add_argument("--live", action="store_true", help="Make billed inference calls. Requires --max-usd.")
@@ -662,7 +671,16 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    reviews = load_reviews(args.data)
+    task = by_name(args.task)
+    if args.task == "routing":
+        data_path = args.data or (ROOT / "data" / "routing" / "requests.jsonl")
+        results_dir = args.results_dir or (ROOT / "results" / "routing")
+        estimates_dir = ROOT / "estimates" / "routing"
+    else:
+        data_path = args.data or DATA_PATH
+        results_dir = args.results_dir or RESULTS_DIR
+        estimates_dir = ROOT / "estimates"
+    reviews = load_reviews(data_path)
     if len(reviews) != 80:
         raise SystemExit(f"expected 80 reviews, found {len(reviews)}")
 
@@ -671,7 +689,7 @@ def main() -> None:
             raise SystemExit("Refusing --live without --max-usd.")
         import indic_smoke.http as http
 
-        estimates = estimate_all(reviews)
+        estimates = estimate_all(reviews, task)
         if args.model == "all":
             or_specs = [by_key(k) for k in LIVE_ORDER]
             run_sarvam = True
@@ -680,7 +698,7 @@ def main() -> None:
             or_specs = [] if spec.provider == "sarvam" else [spec]
             run_sarvam = spec.provider == "sarvam"
 
-        spent = prior_openrouter_spend(RESULTS_DIR, or_specs if or_specs else [by_key(k) for k in LIVE_ORDER])
+        spent = prior_openrouter_spend(results_dir, or_specs if or_specs else [by_key(k) for k in LIVE_ORDER])
         summaries: list[dict[str, Any]] = []
         started = now_ist()
         http.INFERENCE_POSTS_ENABLED = True
@@ -688,7 +706,7 @@ def main() -> None:
             for spec in or_specs:
                 print(f"== {spec.model_id}  spent=${money(spent)}/{money(args.max_usd)}  {now_ist()} ==")
                 summary, spent = live_run_model(
-                    reviews, spec, args.max_usd, spent, RESULTS_DIR, estimates
+                    reviews, spec, args.max_usd, spent, results_dir, estimates, task
                 )
                 summaries.append(summary)
                 print(
@@ -698,7 +716,7 @@ def main() -> None:
             if run_sarvam:
                 sarvam_spec = by_key("sarvam")
                 print(f"== {sarvam_spec.model_id}  INR cap ₹{money(args.max_inr)}  {now_ist()} ==")
-                s_summary = live_run_sarvam(reviews, sarvam_spec, args.max_inr, RESULTS_DIR)
+                s_summary = live_run_sarvam(reviews, sarvam_spec, args.max_inr, results_dir, task)
                 summaries.append(s_summary)
                 print(
                     f"   status={s_summary.get('status')} spend_inr={s_summary.get('spent_inr')} "
@@ -707,6 +725,7 @@ def main() -> None:
         finally:
             http.INFERENCE_POSTS_ENABLED = False
         bundle = {
+            "task": task.key,
             "started_at_ist": started,
             "finished_at_ist": now_ist(),
             "max_usd": money(args.max_usd),
@@ -714,7 +733,7 @@ def main() -> None:
             "max_inr_sarvam": money(args.max_inr),
             "models": summaries,
         }
-        write_json(RESULTS_DIR / "run_summary.json", bundle)
+        write_json(results_dir / "run_summary.json", bundle)
         print(json.dumps({k: bundle[k] for k in bundle if k != "models"}, indent=2))
         for s in summaries:
             if s.get("currency") == "INR":
@@ -732,10 +751,10 @@ def main() -> None:
         return
 
     specs = registry() if args.model == "all" else [by_key(args.model)]
-    result = dry_run(reviews, specs, ROOT / "estimates")
+    result = dry_run(reviews, specs, estimates_dir, task)
     table = format_estimate_table(result["estimate"])
     print(table)
-    print(f"\nWrote {ESTIMATE_PATH}")
+    print(f"\nWrote {estimates_dir / 'cost_estimate.json'}")
     for preview in result["previews"]:
         if preview["blocked"]:
             print(f"blocked: {preview['model_id']}: {preview['blocked']}")

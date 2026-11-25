@@ -1,0 +1,63 @@
+{
+  "status": "ran",
+  "model_id": "perplexity/pplx-decider-v1.3:free",
+  "key": "pplx-full",
+  "returned_model_ids": [
+    "perplexity/pplx-decider-v1.3-20261112"
+  ],
+  "started_at_ist": "2026-11-25 14:34:55 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 14:35:53 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.00000000",
+  "spent_usd_cumulative_after": "0.00000000",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.9875,
+      "hi": 1.0,
+      "ta": 0.95
+    },
+    "drops": {
+      "hi_minus_en": 0.012499999999999956,
+      "ta_minus_en": -0.03750000000000009
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 239.73601650050114,
+      "p95_ms": 278.8066533502388,
+      "min_ms": 182.72289800006547,
+      "max_ms": 473.1612119994679,
+      "mean_ms": 239.15822062080375,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.0,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": {
+      "n": 240,
+      "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+      "brier": 0.03851966763199788,
+      "accuracy_at_p_0_9": {
+        "threshold": 0.9,
+        "ge_threshold": {
+          "n": 216,
+          "correct": 215,
+          "accuracy": 0.9953703703703703
+        },
+        "lt_threshold": {
+          "n": 24,
+          "correct": 20,
+          "accuracy": 0.8333333333333334
+        }
+      }
+    }
+  },
+  "rows_path": "results/pplx-full.jsonl"
+}

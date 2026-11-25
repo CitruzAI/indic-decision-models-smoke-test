@@ -1,0 +1,46 @@
+{
+  "status": "ran",
+  "model_id": "openai/gpt-6-luna",
+  "key": "gpt-luna",
+  "returned_model_ids": [
+    "openai/gpt-6-luna"
+  ],
+  "started_at_ist": "2026-11-25 14:49:58 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 14:53:31 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.00749920",
+  "spent_usd_cumulative_after": "0.02874379",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.9375,
+      "hi": 0.9375,
+      "ta": 0.8375
+    },
+    "drops": {
+      "hi_minus_en": 0.0,
+      "ta_minus_en": -0.09999999999999998
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 767.2891654992782,
+      "p95_ms": 1335.1301152997617,
+      "min_ms": 552.2138020005514,
+      "max_ms": 9216.238712000631,
+      "mean_ms": 883.358996066689,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.0074992,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": null
+  },
+  "rows_path": "results/gpt-luna.jsonl"
+}

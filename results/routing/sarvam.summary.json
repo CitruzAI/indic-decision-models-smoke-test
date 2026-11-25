@@ -1,0 +1,60 @@
+{
+  "status": "ran",
+  "model_id": "sarvam-prism",
+  "key": "sarvam",
+  "currency": "INR",
+  "returned_model_ids": [
+    "sarvam-prism"
+  ],
+  "started_at_ist": "2026-11-25 15:15:52 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 15:36:51 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_inr": "0.19332800",
+  "max_inr": "50.00000000",
+  "cost_note": "Listed rate ₹4/1M input applied to usage prompt tokens. Outside the OpenRouter $2 cap.",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.9625,
+      "hi": 0.95,
+      "ta": 0.9375
+    },
+    "drops": {
+      "hi_minus_en": -0.012500000000000067,
+      "ta_minus_en": -0.025000000000000022
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 4971.7421409986855,
+      "p95_ms": 9791.632366901647,
+      "min_ms": 1061.1069189981208,
+      "max_ms": 16980.40851300175,
+      "mean_ms": 5243.21329113324,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": null,
+    "calibration": {
+      "n": 240,
+      "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+      "brier": 0.08696607855010535,
+      "accuracy_at_p_0_9": {
+        "threshold": 0.9,
+        "ge_threshold": {
+          "n": 205,
+          "correct": 199,
+          "accuracy": 0.9707317073170731
+        },
+        "lt_threshold": {
+          "n": 35,
+          "correct": 29,
+          "accuracy": 0.8285714285714286
+        }
+      }
+    }
+  },
+  "rows_path": "results/sarvam.jsonl"
+}

@@ -6,4 +6,4 @@ Each model has a `*.jsonl` of 240 rows (80 items × en/hi/ta) and a `*.summary.j
 at the official ₹4/1M input rate applied to usage prompt tokens, and are outside the
 OpenRouter $2 total.
 
-See the results table in the top-level README.
+See the sentiment results table in the top-level README. Request-routing results from a later run the same day live in `routing/` and are described in the Request routing section of that README.

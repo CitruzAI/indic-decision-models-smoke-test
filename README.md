@@ -1,8 +1,8 @@
 # Decision models and an Indic smoke test
 
-This note explains how System One decision models work, then records numbers from a small smoke test on English, Hindi, and Tamil product reviews. It is exploratory. It is not a benchmark, and it is not a ranking of models or languages.
+This note explains how System One decision models work, then records numbers from two small smoke tests on English, Hindi, and Tamil: product-review sentiment, and request routing. It is exploratory. It is not a benchmark, and it is not a ranking of models or languages.
 
-Every figure in the results table comes from the live run in `results/`. Proposed public repo name, not created and not pushed: CitruzAI/indic-decision-models-smoke-test.
+Every figure in the sentiment table comes from the live run in `results/`. Every figure in the request-routing table comes from the live run in `results/routing/`. Proposed public repo name, not created and not pushed: CitruzAI/indic-decision-models-smoke-test.
 
 ## What decision models are
 
@@ -176,6 +176,90 @@ Luna, Qwen, and DeepSeek completion costs assume `reasoning_effort=none` and a 5
 
 A free endpoints recheck on 25 November 2026 (Asia/Calcutta) found one live BaseTen endpoint for each of `baseten/bison-1` and `baseten/groundhog-1` (provider status 0). Catalog and endpoint list prices were $0.10/1M in and $0 out for bison-1, and $0.035/1M in and $0 out for groundhog-1. Canonical slugs: `baseten/bison-1-20261120` and `baseten/groundhog-1-20261120`.
 
+## Request routing
+
+A second use case on the same 12 models: route a short request to one of six queues. The interface is unchanged. Decision models still receive a `choice` question; the criteria are the six queue descriptions below. Chat models receive the same descriptions in the system prompt, and still return a constrained JSON label.
+
+### The sample and the options
+
+The texts are 80 items from Amazon MASSIVE (CC BY 4.0): short assistant-style requests, sampled with seed 42 from the test split, and reused at the same ids in English, Hindi, and Tamil. That is 240 texts per model.
+
+Intents from the dataset are mapped onto six queues that follow MASSIVE's own scenario groups. Intents that did not clearly belong on one queue were dropped rather than forced in. The same one-line description of each queue was sent to every model:
+
+- Calendar: Calendar and reminders: events, alarms, and personal to-do or shopping lists.
+- SmartHome: Smart home: lights, plugs, appliances, and other household devices.
+- Media: Media and volume: playing music, radio, podcasts, audiobooks, or games, and volume or playback settings.
+- Orders: Orders and transport: takeaway food, travel tickets, and ride bookings.
+- Info: Info lookup: facts, news, weather, time, conversions, recipes, currency, and stock prices.
+- Email: Email and contacts: reading or sending email, and looking up or adding contacts.
+
+The mapping lives in [`indic_smoke/routing/mapping.py`](indic_smoke/routing/mapping.py). Source notes: [`data/routing/SOURCE.md`](data/routing/SOURCE.md). The sample is [`data/routing/requests.jsonl`](data/routing/requests.jsonl). License text: [`licenses/CC-BY-4.0.txt`](licenses/CC-BY-4.0.txt).
+
+Before sampling, an item was also dropped when any of the English, Hindi, or Tamil texts contained a product wake word or assistant name, including common Hindi and Tamil spellings, or a hey/ok-style prefix immediately followed by one of those names. Tokenization keeps letters and combining marks together so a name is matched only as a whole word. Of the 2,974 test items, 490 were dropped as unmapped. Of the rest, 102 were dropped by this filter. 31 further wake-word items already sat in an unmapped intent, so 133 test items matched the filter in at least one language. Eligible pool sizes after both filters: Calendar 626, SmartHome 204, Media 468, Orders 108, Info 711, Email 265. The 80-id sample, seed 42, is 14 Calendar, 14 Info, and 13 each for SmartHome, Media, Orders, and Email.
+
+Before any live calls, three English examples per option were drawn from that sample and checked by eye. Most labels were a reasonable reading of the text. One Calendar item, r047 ("what are the upcoming concerts in dallas"), already looked like an Info lookup. It later became the most common miss, which is discussed below. The filter left no wake-word items in the sample.
+
+### What we ran
+
+The live run used the same 12 models and adapters as the sentiment run. It ran from 14:34:17 to 15:36:51 IST (Asia/Calcutta) on 25 November 2026, under a new approved $2 cumulative cap on OpenRouter and a separate ₹50 cap for Sarvam. Eleven models finished 240 of 240 texts. bison-1 recorded 240 rows, but one Hindi item (r031/hi) returned HTTP 429 after retries, so bison is scored on 239 texts and was not billed for that row. OpenRouter billed $0.68621082. Sarvam Prism billed ₹0.19332800, outside the USD total.
+
+The pre-run headline estimate was $0.34773840 (complete estimates plus the prompt-only cost of Gemini 4 Hydrogen and GPT-6.2 Sol, excluding Sarvam). The gap is mostly Gemini, which billed $0.46048650 because reasoning is mandatory. Full figures: [`estimates/routing/cost_estimate.json`](estimates/routing/cost_estimate.json).
+
+### What we saw
+
+This is a six-way routing task, n=80 per language. It is harder than the binary sentiment set, and the accuracies spread out more, but it is still a smoke test. Language differences on this sample are not a finding about which language is easier. A handful of recurring misses look like label or translation artefacts, not like a clean model error. Those are listed after the table.
+
+The table is grouped by interface, then sorted alphabetically, not by score.
+
+| Model | Status | n | Acc. en | Acc. hi | Acc. ta | Acc. overall | hi-en | ta-en | p50 ms | p95 ms | Actual cost | Acc. at p≥0.9 (n) | Acc. at p<0.9 (n) | Brier |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Baseten bison-1 (`baseten/bison-1`) | ran_with_errors | 239 / 240 | 0.988 | 0.975 | 0.938 | 0.967 | -0.013 | -0.050 | 216.0 | 272.7 | $0.00591970 | 0.995 (n=201) | 0.816 (n=38) | 0.055 |
+| Baseten groundhog-1 (`baseten/groundhog-1`) | ran | 80 × 3 | 0.975 | 0.950 | 0.950 | 0.958 | -0.025 | -0.025 | 213.7 | 333.7 | $0.00208065 | 1.000 (n=192) | 0.792 (n=48) | 0.069 |
+| Microsoft Decision 1.1 (`microsoft/microsoft-decision-1.1`) | ran | 80 × 3 | 0.988 | 0.950 | 0.950 | 0.963 | -0.038 | -0.038 | 251.6 | 398.5 | $0.00175085 | 0.995 (n=207) | 0.758 (n=33) | 0.058 |
+| Perplexity Decider Flash v1.3 (free) (`perplexity/pplx-decider-flash-v1.3:free`) | ran | 80 × 3 | 0.975 | 0.963 | 0.900 | 0.946 | -0.012 | -0.075 | 145.6 | 194.5 | $0.00000000 | 0.995 (n=211) | 0.586 (n=29) | 0.070 |
+| Perplexity Decider v1.3 (free) (`perplexity/pplx-decider-v1.3:free`) | ran | 80 × 3 | 0.988 | 1.000 | 0.950 | 0.979 | 0.012 | -0.038 | 239.7 | 278.8 | $0.00000000 | 0.995 (n=216) | 0.833 (n=24) | 0.039 |
+| Sarvam Prism (`sarvam-prism`) | ran | 80 × 3 | 0.963 | 0.950 | 0.938 | 0.950 | -0.013 | -0.025 | 4971.7 | 9791.6 | ₹0.19332800 (INR, outside $2 cap) | 0.971 (n=205) | 0.829 (n=35) | 0.087 |
+| TypeSafe Jev 1.14 (`typesafe/jev-1.14`) | ran | 80 × 3 | 0.950 | 0.925 | 0.900 | 0.925 | -0.025 | -0.050 | 138.2 | 210.6 | $0.00499355 | 0.985 (n=199) | 0.634 (n=41) | 0.088 |
+| DeepSeek V4.1 Flash 1017 (`deepseek/deepseek-v4.1-flash-1017`) | ran | 80 × 3 | 0.938 | 0.938 | 0.925 | 0.933 | 0.000 | -0.012 | 424.9 | 986.2 | $0.00649984 | - | - | - |
+| Gemini 4 Hydrogen (`google/gemini-4-hydrogen`) | ran | 80 × 3 | 0.975 | 0.950 | 0.963 | 0.963 | -0.025 | -0.012 | 1729.6 | 6989.0 | $0.46048650 | - | - | - |
+| GPT-6 Luna (`openai/gpt-6-luna`) | ran | 80 × 3 | 0.938 | 0.938 | 0.838 | 0.904 | 0.000 | -0.100 | 767.3 | 1335.1 | $0.00749920 | - | - | - |
+| GPT-6.2 Sol (`openai/gpt-6.2-sol`) | ran | 80 × 3 | 0.925 | 0.913 | 0.900 | 0.913 | -0.013 | -0.025 | 1332.0 | 2547.5 | $0.16470400 | - | - | - |
+| Qwen4 Max (`qwen/qwen4-max`) | ran | 80 × 3 | 0.938 | 0.925 | 0.913 | 0.925 | -0.012 | -0.025 | 1507.5 | 2092.2 | $0.03227654 | - | - | - |
+
+Accuracy, differences, and Brier are rounded half-up from the exact fractions in `results/routing/*.summary.json`. Calibration uses the raw probability vector, not a self-reported confidence field. Luna, Gemini 4 Hydrogen, and GPT-6.2 Sol have a dash in those columns because they have no probability vector. Qwen4 Max and DeepSeek V4.1 Flash 1017 list logprobs, but on this six-way task the returned `top_logprobs` did not cover every option, so no comparable vector was stored and those cells are also dashes.
+
+When a decision model put probability 0.9 or higher on its choice, accuracy on those rows was between 0.971 and 1.000. Below 0.9, accuracy was lower: 0.586 on 29 rows for Perplexity Flash, 0.634 on 41 rows for Jev, and between 0.758 and 0.833 for the other decision models.
+
+A few other details:
+
+- Gemini 4 Hydrogen billed $0.46048650, and GPT-6.2 Sol billed $0.16470400, both above their prompt-only pre-run estimates, because reasoning is mandatory.
+- bison-1's missing score is the r031/hi 429 already noted. The other 239 rows have labels and costs.
+- Luna's Tamil accuracy is 0.838, a 0.100 drop from English on this sample. Several of those Tamil misses are texts that no longer match the English gold, as below.
+
+Returned model ids, as the APIs echoed them, were the same slugs as in the sentiment run: `baseten/bison-1-20261120`, `baseten/groundhog-1-20261120`, `microsoft/microsoft-decision-1.1-20261117`, `perplexity/pplx-decider-flash-v1.3-20261112`, `perplexity/pplx-decider-v1.3-20261112`, `sarvam-prism`, `typesafe/jev-1.14-20261014`, `deepseek/deepseek-v4.1-flash-1017`, `google/gemini-4-hydrogen`, `openai/gpt-6-luna`, `openai/gpt-6.2-sol`, `qwen/qwen4-max`.
+
+Per-model clocks in IST (Asia/Calcutta): Perplexity Flash from 14:34:17 to 14:34:55, Perplexity v1.3 from 14:34:55 to 14:35:53, groundhog from 14:35:53 to 14:36:51, Jev from 14:36:51 to 14:37:41, Microsoft Decision from 14:37:41 to 14:38:57, DeepSeek from 14:38:57 to 14:41:10, bison from 14:41:10 to 14:49:58, Luna from 14:49:58 to 14:53:31, Qwen from 14:53:31 to 14:59:46, Gemini from 14:59:46 to 15:10:00, Sol from 15:10:00 to 15:15:52, Sarvam from 15:15:52 to 15:36:51.
+
+### Where the misses clustered
+
+Across all 12 models there were 162 misses on 2,879 scored rows (bison's one 429 is excluded). The most common gold-to-predicted pairs were Orders to Info (32 misses, 4 ids), Calendar to Info (23 misses, all on r047), Email to Info (22 misses, mostly r070), SmartHome to Media (16 misses, mostly r021), and Info to Media (14 misses, mostly the Tamil text of r063).
+
+The same items dominate the misses on TypeSafe Jev 1.14 (18 misses), Microsoft Decision 1.1 (9 misses), Qwen4 Max (18 misses), and GPT-6 Luna (23 misses). Jev and Microsoft Decision both sent r047 to Info in all three languages. Qwen and Luna did the same, and also often sent delivery-availability questions (r006, r022, r038) from Orders to Info. Luna's extra misses are concentrated in Tamil.
+
+Some of those gaps look like label or translation artefacts, or like an overlap in the queue descriptions, rather than a clean model error. Five examples:
+
+- r047, gold Calendar (`calendar_query`): "what are the upcoming concerts in dallas" (Hindi: concerts in Indore; Tamil: concerts in Chennai). A reasonable person can read this as Info. Eight of 12 models chose Info on English and Hindi, seven on Tamil. bison, both Perplexity deciders, and Sarvam kept Calendar. This was visible in the pre-spend sanity check.
+- r063, gold Info (`qa_definition`). The English text is "suffering consequences". The Tamil text is "ஹிப் பாப் தமிழா", a question about hip hop, which is not a translation of the English line. All 12 models labeled the Tamil text Media. That is a dataset alignment problem, not a routing mistake.
+- r001, gold Media (`play_music`). English is "play it again please". Hindi is "कृपया इसको फिर से चालू करो", which is naturally read as "please turn it on again." Ten of 12 models labeled the Hindi text SmartHome. English was labeled Media by every model.
+- r070, gold Email (`email_querycontact`): "tell me about mary s." With no extra context this reads as an Info lookup about a person. The gold comes from MASSIVE's contact-query intent. Four models chose Info on English, seven on Hindi, nine on Tamil.
+- r021, gold SmartHome (`iot_wemo_on`): "stop start the juice". The gold is a household-device intent, but the English text is garbled. Seven models called the English text Media; the Hindi line ("जूस को देना बंद करो") was twice read as Orders.
+
+A milder overlap sits in the option wording itself. r006, "does pizza hut have delivery", is a takeaway query and so is gold Orders, but it is also a factual question, which is what Info is for. Qwen and Luna often chose Info here. The gold is defensible; so is the other reading.
+
+These artefacts inflate some language drops, especially Luna's Tamil number, and they inflate Calendar-to-Info and Info-to-Media counts. They do not account for every miss, and this is still a small sample.
+
+Request-routing caveats that add to the list below: n=80 per language; six queues, some of which a short request can fairly fit in two places; parallel text here means the same MASSIVE id in three locales, and as r063 shows, that is not always a faithful translation; Amazon MASSIVE is CC BY 4.0, see [`data/routing/SOURCE.md`](data/routing/SOURCE.md).
+
 ## Setup
 
 Python 3.12+ (3.13 was used).
@@ -193,21 +277,24 @@ Keys come only from the environment: `OPENROUTER_API_KEY` and, for Prism, `SARVA
 Dry run, no spend:
 
 ```bash
-python prepare_data.py          # rebuilds the committed 80-row sample; offline
-python run.py --dry-run --estimate
+python prepare_data.py          # rebuilds the committed sentiment sample; offline
+python prepare_routing.py       # rebuilds the committed routing sample; offline if upstream test files are present
+python run.py --task sentiment --dry-run --estimate
+python run.py --task routing --dry-run --estimate
 ```
 
-`--dry-run` tokenizes the 240 texts, writes the estimate, and prints one sample request body per model. It does not POST to any inference endpoint. Inference POSTs are also blocked in code unless `--live` is passed.
+`--task` selects sentiment or routing (data, results, and estimates paths). The default is sentiment. `--dry-run` tokenizes the 240 texts, writes the estimate, and prints one sample request body per model. It does not POST to any inference endpoint. Inference POSTs are also blocked in code unless `--live` is passed.
 
-An approved live run can name one model, or `all` to walk the OpenRouter models in cheap-first order (Perplexity `:free`, groundhog, Jev, Microsoft Decision, DeepSeek, bison, Luna, Qwen, then Gemini and GPT-6.2 Sol last) and then Sarvam Prism. `--max-usd` is a cumulative cap across all OpenRouter models, tracked from each response's `usage.cost`. If that field is missing, the runner falls back to tokens times list price and flags it. The runner stops before a request that is likely to push the running total past the cap. Sarvam is billed in INR under `--max-inr` (default 50) and is outside the USD cap. At most a couple of retries, and only on 429 or 5xx.
+An approved live run can name one model, or `all` to walk the OpenRouter models in cheap-first order (Perplexity `:free`, groundhog, Jev, Microsoft Decision, DeepSeek, bison, Luna, Qwen, then Gemini and GPT-6.2 Sol last) and then Sarvam Prism. `--max-usd` is a cumulative cap across all OpenRouter models for that run, tracked from each response's `usage.cost`. If that field is missing, the runner falls back to tokens times list price and flags it. The runner stops before a request that is likely to push the running total past the cap. Sarvam is billed in INR under `--max-inr` (default 50) and is outside the USD cap. At most a couple of retries, and only on 429 or 5xx.
 
 ```bash
-python run.py --live --model all --max-usd 2.00 --max-inr 50
-python run.py --live --model jev --max-usd 1.00
+python run.py --task sentiment --live --model all --max-usd 2.00 --max-inr 50
+python run.py --task routing --live --model all --max-usd 2.00 --max-inr 50
+python run.py --task routing --live --model jev --max-usd 1.00
 ```
 
 Do not pass `--live` until spend is approved in Kamal's own words.
 
 ## License
 
-Code is MIT (see `LICENSE`). The IndicSentiment excerpt is treated as CC-0; see `data/SOURCE.md`.
+Code is MIT (see `LICENSE`). The IndicSentiment excerpt is treated as CC-0; see `data/SOURCE.md`. The request-routing excerpt is from Amazon MASSIVE, licensed CC BY 4.0; see `data/routing/SOURCE.md`.

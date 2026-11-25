@@ -1,0 +1,46 @@
+{
+  "status": "ran",
+  "model_id": "deepseek/deepseek-v4.1-flash-1017",
+  "key": "deepseek",
+  "returned_model_ids": [
+    "deepseek/deepseek-v4.1-flash-1017"
+  ],
+  "started_at_ist": "2026-11-25 14:38:57 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 14:41:10 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.00649984",
+  "spent_usd_cumulative_after": "0.01532489",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.9375,
+      "hi": 0.9375,
+      "ta": 0.925
+    },
+    "drops": {
+      "hi_minus_en": 0.0,
+      "ta_minus_en": -0.012499999999999956
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 424.89098900023237,
+      "p95_ms": 986.2372469999173,
+      "min_ms": 172.09939300119004,
+      "max_ms": 6151.043313999253,
+      "mean_ms": 549.2478815917366,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.0064998383,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": null
+  },
+  "rows_path": "results/deepseek.jsonl"
+}

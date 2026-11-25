@@ -1,0 +1,46 @@
+{
+  "status": "ran",
+  "model_id": "openai/gpt-6.2-sol",
+  "key": "gpt-sol",
+  "returned_model_ids": [
+    "openai/gpt-6.2-sol"
+  ],
+  "started_at_ist": "2026-11-25 15:10:00 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 15:15:52 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.16470400",
+  "spent_usd_cumulative_after": "0.68621082",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.925,
+      "hi": 0.9125,
+      "ta": 0.9
+    },
+    "drops": {
+      "hi_minus_en": -0.012500000000000067,
+      "ta_minus_en": -0.025000000000000022
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 1331.9850114994551,
+      "p95_ms": 2547.5483149497436,
+      "min_ms": 1050.871298997663,
+      "max_ms": 4599.9835719994735,
+      "mean_ms": 1465.7423530624253,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.164704,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": null
+  },
+  "rows_path": "results/gpt-sol.jsonl"
+}

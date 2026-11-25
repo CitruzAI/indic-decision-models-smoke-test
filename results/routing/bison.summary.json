@@ -1,0 +1,63 @@
+{
+  "status": "ran_with_errors",
+  "model_id": "baseten/bison-1",
+  "key": "bison",
+  "returned_model_ids": [
+    "baseten/bison-1-20261120"
+  ],
+  "started_at_ist": "2026-11-25 14:41:10 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 14:49:58 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 239,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.00591970",
+  "spent_usd_cumulative_after": "0.02124459",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 239,
+    "accuracy_by_language": {
+      "en": 0.9875,
+      "hi": 0.9746835443037974,
+      "ta": 0.9375
+    },
+    "drops": {
+      "hi_minus_en": -0.0128164556962026,
+      "ta_minus_en": -0.050000000000000044
+    },
+    "latency": {
+      "n": 239,
+      "p50_ms": 216.03205000064918,
+      "p95_ms": 272.65850819967454,
+      "min_ms": 164.5728669991513,
+      "max_ms": 697.4988509991817,
+      "mean_ms": 219.41263017572177,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 239,
+      "total_usd": 0.0059197,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": {
+      "n": 239,
+      "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+      "brier": 0.054799514993130315,
+      "accuracy_at_p_0_9": {
+        "threshold": 0.9,
+        "ge_threshold": {
+          "n": 201,
+          "correct": 200,
+          "accuracy": 0.9950248756218906
+        },
+        "lt_threshold": {
+          "n": 38,
+          "correct": 31,
+          "accuracy": 0.8157894736842105
+        }
+      }
+    }
+  },
+  "rows_path": "results/bison.jsonl"
+}

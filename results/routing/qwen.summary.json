@@ -1,0 +1,46 @@
+{
+  "status": "ran",
+  "model_id": "qwen/qwen4-max",
+  "key": "qwen",
+  "returned_model_ids": [
+    "qwen/qwen4-max"
+  ],
+  "started_at_ist": "2026-11-25 14:53:31 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 14:59:46 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.03227654",
+  "spent_usd_cumulative_after": "0.06102032",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.9375,
+      "hi": 0.925,
+      "ta": 0.9125
+    },
+    "drops": {
+      "hi_minus_en": -0.012499999999999956,
+      "ta_minus_en": -0.025000000000000022
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 1507.4765845010916,
+      "p95_ms": 2092.1986057496715,
+      "min_ms": 1050.275823999982,
+      "max_ms": 3215.01069399892,
+      "mean_ms": 1561.8031259209145,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.032276535,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": null
+  },
+  "rows_path": "results/qwen.jsonl"
+}

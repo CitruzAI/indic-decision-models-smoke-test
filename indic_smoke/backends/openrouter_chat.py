@@ -14,14 +14,14 @@ from typing import Any
 
 from indic_smoke.config import ModelSpec
 from indic_smoke.http import env_key, request_json
-from indic_smoke.prompts import LABELS, llm_messages, llm_response_format
+from indic_smoke.task import SENTIMENT, TaskSpec
 
 
-def build_request(spec: ModelSpec, text: str) -> dict[str, Any]:
+def build_request(spec: ModelSpec, text: str, task: TaskSpec = SENTIMENT) -> dict[str, Any]:
     body: dict[str, Any] = {
         "model": spec.model_id,
-        "messages": llm_messages(text),
-        "response_format": llm_response_format(),
+        "messages": task.llm_messages(text),
+        "response_format": task.llm_response_format(),
         "max_tokens": (
             4096
             if (spec.reasoning or {}).get("mandatory")
@@ -38,7 +38,7 @@ def build_request(spec: ModelSpec, text: str) -> dict[str, Any]:
     return body
 
 
-def _probs_from_logprobs(choice: dict[str, Any]) -> dict[str, float] | None:
+def _probs_from_logprobs(choice: dict[str, Any], labels: tuple[str, ...]) -> dict[str, float] | None:
     """If the first content token's top_logprobs cover both labels, softmax them.
 
     This is best-effort. Structured output may wrap the label in JSON punctuation,
@@ -55,22 +55,23 @@ def _probs_from_logprobs(choice: dict[str, Any]) -> dict[str, float] | None:
         found: dict[str, float] = {}
         for item in top:
             piece = (item.get("token") or "").strip().strip('"')
-            if piece in LABELS and "logprob" in item:
+            if piece in labels and "logprob" in item:
                 found[piece] = float(item["logprob"])
-        if raw in LABELS and raw not in found and "logprob" in step:
+        if raw in labels and raw not in found and "logprob" in step:
             found[raw] = float(step["logprob"])
-        if len(found) >= 1 and any(label in found for label in LABELS):
+        if len(found) >= 1 and any(label in found for label in labels):
             # If only one label appeared, we cannot form a two-way distribution honestly.
-            if not all(label in found for label in LABELS):
+            if not all(label in found for label in labels):
                 return None
             mx = max(found.values())
             exps = {k: math.exp(v - mx) for k, v in found.items()}
             z = sum(exps.values())
-            return {k: exps[k] / z for k in LABELS}
+            return {k: exps[k] / z for k in labels}
     return None
 
 
-def parse_answer(payload: dict[str, Any], supports_logprobs: bool) -> dict[str, Any]:
+def parse_answer(payload: dict[str, Any], supports_logprobs: bool, task: TaskSpec = SENTIMENT) -> dict[str, Any]:
+    labels = task.labels
     choices = payload.get("choices") or []
     if not choices:
         return {"pred": None, "probs": None, "error": "no choices"}
@@ -84,13 +85,13 @@ def parse_answer(payload: dict[str, Any], supports_logprobs: bool) -> dict[str, 
     except (json.JSONDecodeError, AttributeError, TypeError):
         # Fall back to finding an exact label in the raw text, nothing fuzzier.
         stripped = content.strip().strip('"')
-        if stripped in LABELS:
+        if stripped in labels:
             pred = stripped
         else:
             return {"pred": None, "probs": None, "error": "unparseable content"}
-    if pred not in LABELS:
+    if pred not in labels:
         return {"pred": pred, "probs": None, "error": f"label not in enum: {pred!r}"}
-    probs = _probs_from_logprobs(choice) if supports_logprobs else None
+    probs = _probs_from_logprobs(choice, labels) if supports_logprobs else None
     return {"pred": pred, "probs": probs}
 
 
@@ -116,7 +117,7 @@ def _http_error(status: int, payload: dict[str, Any] | None) -> str:
     return f"http {status}" + (f": {detail}" if detail else "")
 
 
-def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
+def infer(spec: ModelSpec, text: str, task: TaskSpec = SENTIMENT) -> dict[str, Any]:
     key = env_key(spec.auth_env)
     if not key:
         raise RuntimeError(f"{spec.auth_env} is not set in the current environment")
@@ -125,7 +126,7 @@ def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
         "POST",
         spec.endpoint,
         headers={"Authorization": f"Bearer {key}"},
-        body=build_request(spec, text),
+        body=build_request(spec, text, task),
         timeout=180.0,
     )
     latency_ms = (time.perf_counter() - t0) * 1000.0
@@ -140,7 +141,7 @@ def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
             "usage": payload.get("usage") if isinstance(payload, dict) else None,
             "model": payload.get("model") if isinstance(payload, dict) else None,
         }
-    parsed = parse_answer(payload, spec.supports_logprobs)
+    parsed = parse_answer(payload, spec.supports_logprobs, task)
     parsed["latency_ms"] = latency_ms
     parsed["cost_usd"] = usage_cost_usd(payload)
     parsed["http_status"] = status

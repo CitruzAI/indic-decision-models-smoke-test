@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from indic_smoke.config import ModelSpec, registry
+from indic_smoke.task import SENTIMENT, TaskSpec
 from indic_smoke.tokenize_approx import (
     ENCODING_NAME,
     assumed_structured_output_text,
@@ -42,13 +43,13 @@ def iter_texts(reviews: Iterable[dict[str, Any]]) -> list[tuple[str, str, str]]:
     return out
 
 
-def estimate_model(spec: ModelSpec, texts: list[tuple[str, str, str]]) -> dict[str, Any]:
+def estimate_model(spec: ModelSpec, texts: list[tuple[str, str, str]], task: TaskSpec = SENTIMENT) -> dict[str, Any]:
     n = len(texts)
     per_lang_prompt = defaultdict(int)
     total_prompt = 0
-    assumed_out = count_tokens(assumed_structured_output_text())
+    assumed_out = count_tokens(assumed_structured_output_text(task))
     for _id, lang, text in texts:
-        report = token_report(text)
+        report = token_report(text, task)
         if spec.family == "decisions":
             tokens = report["decisions_prompt_tokens"]
         else:
@@ -124,7 +125,7 @@ def estimate_model(spec: ModelSpec, texts: list[tuple[str, str, str]]) -> dict[s
             result["assumed_completion_note"] = (
                 f"Assumes reasoning_effort=none and a structured body of "
                 f"{assumed_out} {ENCODING_NAME} tokens "
-                f"({assumed_structured_output_text()!r}) per request."
+                f"({assumed_structured_output_text(task)!r}) per request."
             )
 
     total = prompt_usd + completion_usd + request_fees
@@ -141,12 +142,12 @@ def estimate_model(spec: ModelSpec, texts: list[tuple[str, str, str]]) -> dict[s
     return result
 
 
-def estimate_all(reviews: list[dict[str, Any]]) -> dict[str, Any]:
+def estimate_all(reviews: list[dict[str, Any]], task: TaskSpec = SENTIMENT) -> dict[str, Any]:
     texts = iter_texts(reviews)
     if len(texts) != 240:
         raise RuntimeError(f"expected 240 texts, found {len(texts)}")
     specs = registry()
-    models = [estimate_model(spec, texts) for spec in specs]
+    models = [estimate_model(spec, texts, task) for spec in specs]
     priced = [m for m in models if m["total_usd"] is not None]
     complete = [m for m in priced if m["estimate_complete"]]
     incomplete = [m for m in priced if not m["estimate_complete"]]

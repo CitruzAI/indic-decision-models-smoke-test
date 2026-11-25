@@ -1,0 +1,63 @@
+{
+  "status": "ran",
+  "model_id": "baseten/groundhog-1",
+  "key": "groundhog",
+  "returned_model_ids": [
+    "baseten/groundhog-1-20261120"
+  ],
+  "started_at_ist": "2026-11-25 14:35:53 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 14:36:51 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.00208065",
+  "spent_usd_cumulative_after": "0.00208065",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.975,
+      "hi": 0.95,
+      "ta": 0.95
+    },
+    "drops": {
+      "hi_minus_en": -0.025000000000000022,
+      "ta_minus_en": -0.025000000000000022
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 213.73009550006827,
+      "p95_ms": 333.7229522005144,
+      "min_ms": 159.5791689996986,
+      "max_ms": 1555.4424020010629,
+      "mean_ms": 240.73500972083366,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.002080645,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": {
+      "n": 240,
+      "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+      "brier": 0.06946293352037941,
+      "accuracy_at_p_0_9": {
+        "threshold": 0.9,
+        "ge_threshold": {
+          "n": 192,
+          "correct": 192,
+          "accuracy": 1.0
+        },
+        "lt_threshold": {
+          "n": 48,
+          "correct": 38,
+          "accuracy": 0.7916666666666666
+        }
+      }
+    }
+  },
+  "rows_path": "results/groundhog.jsonl"
+}
