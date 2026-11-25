@@ -1,0 +1,63 @@
+{
+  "status": "ran",
+  "model_id": "microsoft/microsoft-decision-1.1",
+  "key": "msdecision",
+  "returned_model_ids": [
+    "microsoft/microsoft-decision-1.1-20261117"
+  ],
+  "started_at_ist": "2026-11-25 12:38:31 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 12:39:31 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.00095844",
+  "spent_usd_cumulative_after": "0.00648075",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.9875,
+      "hi": 0.9875,
+      "ta": 1.0
+    },
+    "drops": {
+      "hi_minus_en": 0.0,
+      "ta_minus_en": 0.012499999999999956
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 234.6264524999242,
+      "p95_ms": 317.10650910026743,
+      "min_ms": 173.34714200023882,
+      "max_ms": 2339.5112960006372,
+      "mean_ms": 248.84173405419384,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.00095844,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": {
+      "n": 240,
+      "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+      "brier": 0.01336875704906636,
+      "accuracy_at_p_0_9": {
+        "threshold": 0.9,
+        "ge_threshold": {
+          "n": 225,
+          "correct": 225,
+          "accuracy": 1.0
+        },
+        "lt_threshold": {
+          "n": 15,
+          "correct": 13,
+          "accuracy": 0.8666666666666667
+        }
+      }
+    }
+  },
+  "rows_path": "results/msdecision.jsonl"
+}

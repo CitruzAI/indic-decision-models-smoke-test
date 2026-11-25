@@ -1,0 +1,63 @@
+{
+  "status": "ran",
+  "model_id": "typesafe/jev-1.14",
+  "key": "jev",
+  "returned_model_ids": [
+    "typesafe/jev-1.14-20261014"
+  ],
+  "started_at_ist": "2026-11-25 12:37:59 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 12:38:31 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.00423641",
+  "spent_usd_cumulative_after": "0.00552231",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 1.0,
+      "hi": 0.975,
+      "ta": 0.9875
+    },
+    "drops": {
+      "hi_minus_en": -0.025000000000000022,
+      "ta_minus_en": -0.012499999999999956
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 134.08727699970768,
+      "p95_ms": 191.9112890499036,
+      "min_ms": 62.47675299982802,
+      "max_ms": 426.3670350001121,
+      "mean_ms": 135.79493152084297,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.004236414,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": {
+      "n": 240,
+      "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+      "brier": 0.014875833333333385,
+      "accuracy_at_p_0_9": {
+        "threshold": 0.9,
+        "ge_threshold": {
+          "n": 230,
+          "correct": 230,
+          "accuracy": 1.0
+        },
+        "lt_threshold": {
+          "n": 10,
+          "correct": 7,
+          "accuracy": 0.7
+        }
+      }
+    }
+  },
+  "rows_path": "results/jev.jsonl"
+}

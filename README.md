@@ -2,7 +2,7 @@
 
 How do System One decision models, and general LLMs used as deciders, hold up on **Hindi and Tamil** versus **English**?
 
-This is a **smoke test, n=80 items × 3 languages = 240 texts per model**, not a benchmark. Every later number in a results table must come from a run recorded in `results/`. This commit ships the harness, the fixed sample, and a **cost estimate**. No inference call has been made yet.
+This is a **smoke test, n=80 items × 3 languages = 240 texts per model**, not a benchmark. Every later number in a results table must come from a run recorded in `results/`. The harness, fixed sample, and cost estimate shipped first. A live run under an approved $2 OpenRouter cap (plus a separate ₹50 cap for Sarvam Prism) is recorded in `results/`.
 
 Proposed public repo name (not created, not pushed): **CitruzAI/indic-decision-models-smoke-test**.
 
@@ -149,23 +149,41 @@ Do not pass `--live` until spend is approved in Kamal’s own words.
 
 ## Results
 
-*Placeholder. No model has been run. This commit ends at the estimate above.*
+Smoke test, n=80 per language. Self-reported confidence is not comparable and is not used. Accuracy, drops, and Brier are rounded half-up from the exact fractions in `results/*.summary.json`. Costs are actual OpenRouter `usage.cost` totals, except Sarvam (INR, listed ₹4/1M input × usage prompt tokens, outside the $2 cap). Calibration (Brier and accuracy at p≥0.9) is only reported when a probability vector exists — decision-model `probabilities`, or a softmax over logprobs. Luna, Gemini 4 Hydrogen, and GPT-6.2 Sol have no comparable probability vector.
 
-Smoke test, n=80 per language. Self-reported confidence is not comparable and is not used.
+Live run window: 25 November 2026, 12:35:38–13:13:20 IST (Asia/Calcutta). A `RemoteDisconnected` crash interrupted Qwen at about 12:50:02 IST; the run resumed at 12:50:46 IST from s029. All 12 models completed 240/240 texts. No model had to stop at a partial n for the cap.
 
 | Model | Status | n | Acc. en | Acc. hi | Acc. ta | hi−en | ta−en | p50 ms | p95 ms | Actual cost | Acc. at p≥0.9 (n) | Acc. at p<0.9 (n) | Brier |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | not run | 80 × 3 | — | — | — | — | — | — | — | — | — | — | — |
+| Perplexity Decider Flash v1.3 (free) (`perplexity/pplx-decider-flash-v1.3:free`) | ran | 80 × 3 | 0.975 | 0.988 | 0.988 | 0.013 | 0.013 | 143.2 | 195.0 | $0.00000000 | 1.000 (n=215) | 0.840 (n=25) | 0.022 |
+| Perplexity Decider v1.3 (free) (`perplexity/pplx-decider-v1.3:free`) | ran | 80 × 3 | 0.975 | 0.988 | 0.988 | 0.013 | 0.013 | 233.8 | 267.2 | $0.00000000 | 1.000 (n=225) | 0.733 (n=15) | 0.020 |
+| Baseten groundhog-1 (`baseten/groundhog-1`) | ran | 80 × 3 | 1.000 | 1.000 | 0.975 | 0.000 | -0.025 | 206.0 | 242.1 | $0.00128590 | 1.000 (n=191) | 0.959 (n=49) | 0.025 |
+| TypeSafe Jev 1.14 (`typesafe/jev-1.14`) | ran | 80 × 3 | 1.000 | 0.975 | 0.988 | -0.025 | -0.013 | 134.1 | 191.9 | $0.00423641 | 1.000 (n=230) | 0.700 (n=10) | 0.015 |
+| Microsoft Decision 1.1 (`microsoft/microsoft-decision-1.1`) | ran | 80 × 3 | 0.988 | 0.988 | 1.000 | 0.000 | 0.013 | 234.6 | 317.1 | $0.00095844 | 1.000 (n=225) | 0.867 (n=15) | 0.013 |
+| DeepSeek V4.1 Flash 1017 (`deepseek/deepseek-v4.1-flash-1017`) | ran | 80 × 3 | 1.000 | 1.000 | 0.988 | 0.000 | -0.013 | 461.8 | 2360.7 | $0.00408200 | 1.000 (n=105) | 1.000 (n=2) | 0.002 |
+| Baseten bison-1 (`baseten/bison-1`) | ran | 80 × 3 | 1.000 | 0.988 | 1.000 | -0.013 | 0.000 | 213.3 | 301.0 | $0.00367400 | 1.000 (n=211) | 0.966 (n=29) | 0.018 |
+| GPT-6 Luna (`openai/gpt-6-luna`) | ran | 80 × 3 | 1.000 | 1.000 | 0.988 | 0.000 | -0.013 | 766.0 | 1627.5 | $0.00468800 | — | — | — |
+| Qwen4 Max (`qwen/qwen4-max`) | ran | 80 × 3 | 0.988 | 0.988 | 0.988 | 0.000 | 0.000 | 1549.7 | 2165.4 | $0.07187843 | 1.000 (n=227) | 0.667 (n=9) | 0.014 |
+| Gemini 4 Hydrogen (`google/gemini-4-hydrogen`) | ran | 80 × 3 | 0.988 | 0.988 | 1.000 | 0.000 | 0.013 | 1521.9 | 2473.7 | $0.43529400 | — | — | — |
+| GPT-6.2 Sol (`openai/gpt-6.2-sol`) | ran | 80 × 3 | 1.000 | 1.000 | 1.000 | 0.000 | 0.000 | 1168.4 | 1543.0 | $0.10046000 | — | — | — |
+| Sarvam Prism (`sarvam-prism`) | ran | 80 × 3 | 1.000 | 0.988 | 0.988 | -0.013 | -0.013 | 1206.5 | 2036.0 | ₹0.09485200 (INR, outside $2 cap) | 1.000 (n=213) | 0.926 (n=27) | 0.022 |
+
+**OpenRouter actual spend (cumulative, all 11 models): $0.62655718**, under the approved $2 cap. **Sarvam Prism actual spend: ₹0.09485200**, under the ₹50 cap and outside the USD total.
+
+Returned model ids, as the APIs echoed them: `perplexity/pplx-decider-flash-v1.3-20261112`, `perplexity/pplx-decider-v1.3-20261112`, `baseten/groundhog-1-20261120`, `typesafe/jev-1.14-20261014`, `microsoft/microsoft-decision-1.1-20261117`, `deepseek/deepseek-v4.1-flash-1017`, `baseten/bison-1-20261120`, `openai/gpt-6-luna`, `qwen/qwen4-max`, `google/gemini-4-hydrogen`, `openai/gpt-6.2-sol`, `sarvam-prism`.
+
+Notes on this table:
+
+- DeepSeek’s Brier and accuracy-at-p figures use only the 107/240 items where both labels appeared in `top_logprobs`. The other 133 had a label but no comparable probability vector.
+- Qwen’s calibration uses 236/240 items. Four items (s027/ta, s028/en, s028/hi, s028/ta) were billed successfully, then lost from the in-memory flush when the connection dropped; they were recovered from the log for accuracy and cost, without probability or latency. Qwen p50/p95 are over the 236 timed items.
+- Language drops are small on this sample. Several models were slightly *better* on Hindi or Tamil than on English. One recurring miss is item s011 (gold Negative), often predicted Positive, including in English for a few models.
+- GPT-6.2 Sol was the only model with a perfect 240/240.
+
+Per-model clocks (IST, Asia/Calcutta): Flash 12:35:38–12:36:13; full decider 12:36:13–12:37:10; groundhog 12:37:10–12:37:59; Jev 12:37:59–12:38:31; Microsoft Decision 12:38:31–12:39:31; DeepSeek 12:39:31–12:42:38; bison 12:42:38–12:43:31; Luna 12:43:31–12:47:09; Qwen 12:47:09–12:55:39 (gap 12:50:02–12:50:46); Gemini 12:55:39–13:02:43; Sol 13:02:43–13:07:34; Sarvam 13:07:34–13:13:20.
 
 ## Blocked for a live run (current environment)
 
-Looked for `SARVAM_API_KEY` only in the current process environment. `BASETEN_API_KEY` is not used.
-
-| Model | Blocked because |
-| --- | --- |
-| — | None in the current environment. `OPENROUTER_API_KEY` and `SARVAM_API_KEY` are set. No inference POST has been made in this commit. |
-
-The unsuffixed Perplexity v1.3 ids remain unroutable (0 endpoints) and are not in the runnable lineup.
+Nothing in the lineup was blocked. `OPENROUTER_API_KEY` and `SARVAM_API_KEY` were set. `BASETEN_API_KEY` is not used. The unsuffixed Perplexity v1.3 ids remain unroutable (0 endpoints) and were not in the runnable lineup.
 
 ## Caveats
 

@@ -160,7 +160,17 @@ def _call_with_retries(adapter: Any, spec: ModelSpec, text: str, *, max_retries:
     result: dict[str, Any] | None = None
     attempts = max_retries + 1
     for attempt in range(1, attempts + 1):
-        result = adapter.infer(spec, text)
+        try:
+            result = adapter.infer(spec, text)
+        except Exception as exc:  # noqa: BLE001 — transport bugs must not kill the run
+            result = {
+                "pred": None,
+                "probs": None,
+                "latency_ms": None,
+                "cost_usd": None,
+                "error": f"client exception: {type(exc).__name__}: {str(exc)[:300]}",
+                "http_status": 599,
+            }
         status = result.get("http_status")
         if status == 429 or (status is not None and status >= 500):
             if attempt >= attempts:
@@ -237,7 +247,15 @@ def live_run_model(
         return summary, spent
 
     adapter = ADAPTERS[(spec.provider, spec.family)]
-    started_at = now_ist()
+    prev_summary_path = out_dir / f"{spec.key}.summary.json"
+    prev_summary = {}
+    if prev_summary_path.exists():
+        try:
+            import json as _json
+            prev_summary = _json.loads(prev_summary_path.read_text(encoding="utf-8"))
+        except Exception:
+            prev_summary = {}
+    started_at = prev_summary.get("started_at_ist") if (not todo and prev_summary.get("started_at_ist")) else now_ist()
     rows = list(existing)
     model_spend = sum(
         (Decimal(str(r["cost_usd"])) for r in existing if r.get("cost_usd") is not None),
@@ -303,8 +321,7 @@ def live_run_model(
             f"item=${money(cost) if cost is not None else 'n/a'} "
             f"spent=${money(spent)}/{money(max_usd)}"
         )
-        if len(rows) % 5 == 0:
-            write_jsonl(jsonl_path, rows)
+        write_jsonl(jsonl_path, rows)
         if cost is not None and spent >= max_usd:
             aborted = (
                 f"Stopped after {row['id']}/{lang}: cumulative spend ${money(spent)} "
@@ -330,7 +347,9 @@ def live_run_model(
         "key": spec.key,
         "returned_model_ids": sorted(returned_ids),
         "started_at_ist": started_at,
-        "finished_at_ist": now_ist(),
+        "finished_at_ist": (
+            prev_summary.get("finished_at_ist") if (not todo and prev_summary.get("finished_at_ist")) else now_ist()
+        ),
         "n_planned": n_planned,
         "n_recorded": n_done,
         "n_scored": n_scored,

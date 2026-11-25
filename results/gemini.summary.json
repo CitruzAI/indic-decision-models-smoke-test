@@ -1,0 +1,46 @@
+{
+  "status": "ran",
+  "model_id": "google/gemini-4-hydrogen",
+  "key": "gemini",
+  "returned_model_ids": [
+    "google/gemini-4-hydrogen"
+  ],
+  "started_at_ist": "2026-11-25 12:55:39 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 13:02:43 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.43529400",
+  "spent_usd_cumulative_after": "0.52609718",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.9875,
+      "hi": 0.9875,
+      "ta": 1.0
+    },
+    "drops": {
+      "hi_minus_en": 0.0,
+      "ta_minus_en": 0.012499999999999956
+    },
+    "latency": {
+      "n": 240,
+      "p50_ms": 1521.8970349997107,
+      "p95_ms": 2473.659025750567,
+      "min_ms": 975.2095599997119,
+      "max_ms": 3460.5558719995315,
+      "mean_ms": 1623.0211263458991,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.435294,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": null
+  },
+  "rows_path": "results/gemini.jsonl"
+}

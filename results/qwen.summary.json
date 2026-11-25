@@ -1,0 +1,64 @@
+{
+  "status": "ran",
+  "model_id": "qwen/qwen4-max",
+  "key": "qwen",
+  "returned_model_ids": [
+    "qwen/qwen4-max"
+  ],
+  "started_at_ist": "2026-11-25 12:47:09 IST (Asia/Calcutta)",
+  "finished_at_ist": "2026-11-25 12:55:39 IST (Asia/Calcutta)",
+  "n_planned": 240,
+  "n_recorded": 240,
+  "n_scored": 240,
+  "partial": false,
+  "abort_reason": null,
+  "spent_usd_this_model": "0.07187843",
+  "spent_usd_cumulative_after": "0.09080318",
+  "max_usd": "2.00000000",
+  "metrics": {
+    "n_rows": 240,
+    "accuracy_by_language": {
+      "en": 0.9875,
+      "hi": 0.9875,
+      "ta": 0.9875
+    },
+    "drops": {
+      "hi_minus_en": 0.0,
+      "ta_minus_en": 0.0
+    },
+    "latency": {
+      "n": 236,
+      "p50_ms": 1549.7244820003289,
+      "p95_ms": 2165.3542387500693,
+      "min_ms": 1037.0844899989606,
+      "max_ms": 22591.13272200011,
+      "mean_ms": 1742.3083187584673,
+      "definition": "Wall-clock time per request, after any client-side warmup, covering the network call."
+    },
+    "cost": {
+      "n": 240,
+      "total_usd": 0.071878425,
+      "source": "OpenRouter usage.cost (or equivalent billed field) from each response. Never estimated after the fact."
+    },
+    "calibration": {
+      "n": 236,
+      "probability_source": "model probability vector (decision-model probabilities, or softmax over logprobs). Self-reported confidence is not used.",
+      "brier": 0.013686674556193415,
+      "accuracy_at_p_0_9": {
+        "threshold": 0.9,
+        "ge_threshold": {
+          "n": 227,
+          "correct": 227,
+          "accuracy": 1.0
+        },
+        "lt_threshold": {
+          "n": 9,
+          "correct": 6,
+          "accuracy": 0.6666666666666666
+        }
+      }
+    }
+  },
+  "rows_path": "results/qwen.jsonl",
+  "run_note": "Interrupted at about 12:50:02 IST (Asia/Calcutta) by an uncaught RemoteDisconnected on the request after s028/ta. Resumed at 12:50:46 IST. Four billed items (s027/ta, s028/en, s028/hi, s028/ta) were recovered from the log so they were not re-billed; those four have accuracy and cost but no saved probability vector or latency. Calibration uses n=236."
+}

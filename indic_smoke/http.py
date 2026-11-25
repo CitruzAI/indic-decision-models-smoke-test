@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import http.client
 import urllib.error
 import urllib.request
 from typing import Any
@@ -64,6 +65,10 @@ def request_json(
         except json.JSONDecodeError:
             payload = {"error": "non-json error body", "status": exc.code}
         return exc.code, payload
+    except (urllib.error.URLError, TimeoutError, http.client.RemoteDisconnected,
+            http.client.IncompleteRead, ConnectionError, OSError) as exc:
+        # Treat transport failures as a retryable 599. Never include headers.
+        return 599, {"error": {"type": type(exc).__name__, "message": str(exc)[:300]}}
 
 
 def env_key(name: str) -> str | None:
