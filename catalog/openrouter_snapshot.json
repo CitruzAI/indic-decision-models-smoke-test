@@ -446,7 +446,35 @@
       "supported_parameters": [],
       "reasoning": null,
       "default_parameters": {},
-      "created": 1795210416
+      "created": 1795210416,
+      "description": "Bison 1 is a 31B decision model from Base Labs, Baseten's research team, built on Gemma 4 31B. Given a state (text, JSON, or images) and typed questions (yes/no, multiple..."
+    },
+    "baseten/groundhog-1": {
+      "id": "baseten/groundhog-1",
+      "canonical_slug": "baseten/groundhog-1-20261120",
+      "name": "Baseten: Groundhog 1",
+      "pricing": {
+        "prompt": "0.000000035",
+        "completion": "0"
+      },
+      "context_length": 16384,
+      "architecture": {
+        "modality": "text+image->decisions",
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "decisions"
+        ],
+        "tokenizer": "Other",
+        "instruct_type": null
+      },
+      "supported_parameters": [],
+      "reasoning": null,
+      "default_parameters": {},
+      "created": 1795210420,
+      "description": "Groundhog 1 is a decision model from Base Labs, Baseten's research team, built on Gemma 4 26B A4B, a mixture-of-experts model with 4B active parameters. Given a state (text, JSON,..."
     }
   },
   "endpoints": {
@@ -2863,13 +2891,38 @@
             "prompt": "0.0000001",
             "completion": "0",
             "discount": 0
-          }
+          },
+          "supported_parameters": [],
+          "context_length": 32768,
+          "quantization": "unknown"
         }
-      ]
+      ],
+      "checked": "free GET /api/v1/models/<id>/endpoints, 2026-11-25"
+    },
+    "baseten/groundhog-1": {
+      "name": "Baseten: Groundhog 1",
+      "n_endpoints": 1,
+      "endpoints": [
+        {
+          "provider_name": "BaseTen",
+          "status": 0,
+          "pricing": {
+            "prompt": "0.000000035",
+            "completion": "0",
+            "discount": 0
+          },
+          "supported_parameters": [],
+          "context_length": 16384,
+          "quantization": "unknown"
+        }
+      ],
+      "checked": "free GET /api/v1/models/<id>/endpoints, 2026-11-25"
     }
   },
   "notes": {
     "pplx_v1_3_unsuffixed": "GET .../perplexity/pplx-decider-flash-v1.3/endpoints and .../pplx-decider-v1.3/endpoints returned a model record but n_endpoints=0. The decisions catalog lists only the :free suffixes at $0.",
-    "jev_not_in_default_catalog": "typesafe/jev-1.14 is listed only when querying output_modalities=decisions, not in the unfiltered chat-model catalog."
-  }
+    "jev_not_in_default_catalog": "typesafe/jev-1.14 is listed only when querying output_modalities=decisions, not in the unfiltered chat-model catalog.",
+    "baseten_openrouter": "baseten/bison-1 and baseten/groundhog-1 are called via OpenRouter POST /api/alpha/decisions, not the direct Baseten API. Catalog and endpoint prices: bison-1 $0.10/1M in $0 out; groundhog-1 $0.035/1M in $0 out. Each has 1 BaseTen endpoint with status=0."
+  },
+  "bison_groundhog_recheck_ist": "2026-11-25 12:29 IST (Asia/Calcutta)"
 }

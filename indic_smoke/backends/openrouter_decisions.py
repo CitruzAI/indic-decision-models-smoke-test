@@ -47,6 +47,21 @@ def usage_cost_usd(payload: dict[str, Any]) -> float | None:
     return None
 
 
+
+def _http_error(status: int, payload: dict[str, Any] | None) -> str:
+    detail = ""
+    if isinstance(payload, dict):
+        err = payload.get("error")
+        if isinstance(err, dict):
+            parts = [str(err.get(k)) for k in ("code", "type", "message") if err.get(k)]
+            detail = " ".join(parts)
+        elif isinstance(err, str):
+            detail = err[:500]
+        elif payload.get("message"):
+            detail = str(payload["message"])[:500]
+    return f"http {status}" + (f": {detail}" if detail else "")
+
+
 def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
     key = env_key(spec.auth_env)
     if not key:
@@ -65,12 +80,15 @@ def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
             "probs": None,
             "latency_ms": latency_ms,
             "cost_usd": usage_cost_usd(payload),
-            "error": f"http {status}",
+            "error": _http_error(status, payload),
             "http_status": status,
+            "usage": payload.get("usage") if isinstance(payload, dict) else None,
+            "model": payload.get("model") if isinstance(payload, dict) else None,
         }
     parsed = parse_answer(payload)
     parsed["latency_ms"] = latency_ms
     parsed["cost_usd"] = usage_cost_usd(payload)
     parsed["http_status"] = status
     parsed["usage"] = payload.get("usage")
+    parsed["model"] = payload.get("model")
     return parsed

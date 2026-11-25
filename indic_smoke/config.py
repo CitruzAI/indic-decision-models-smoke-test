@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SNAPSHOT_PATH = ROOT / "catalog" / "openrouter_snapshot.json"
 
 Family = Literal["decisions", "chat"]
-Provider = Literal["openrouter", "sarvam", "baseten"]
+Provider = Literal["openrouter", "sarvam"]
 
 
 @dataclass(frozen=True)
@@ -84,8 +84,12 @@ def registry(snapshot: dict[str, Any] | None = None) -> list[ModelSpec]:
         pricing = _or_prices(snap, mid, bucket)
         return _dec(pricing.get("completion") or "0")
 
-    pplx_flash_eps = (endpoints.get("perplexity/pplx-decider-flash-v1.3") or {}).get("n_endpoints", 0)
-    pplx_full_eps = (endpoints.get("perplexity/pplx-decider-v1.3") or {}).get("n_endpoints", 0)
+    pplx_flash_unsuffixed_eps = (endpoints.get("perplexity/pplx-decider-flash-v1.3") or {}).get("n_endpoints", 0)
+    pplx_full_unsuffixed_eps = (endpoints.get("perplexity/pplx-decider-v1.3") or {}).get("n_endpoints", 0)
+    pplx_flash_free_eps = (endpoints.get("perplexity/pplx-decider-flash-v1.3:free") or {}).get("n_endpoints", 0)
+    pplx_full_free_eps = (endpoints.get("perplexity/pplx-decider-v1.3:free") or {}).get("n_endpoints", 0)
+    bison_eps = (endpoints.get("baseten/bison-1") or {}).get("n_endpoints", 0)
+    groundhog_eps = (endpoints.get("baseten/groundhog-1") or {}).get("n_endpoints", 0)
 
     specs = [
         ModelSpec(
@@ -129,42 +133,42 @@ def registry(snapshot: dict[str, Any] | None = None) -> list[ModelSpec]:
         ),
         ModelSpec(
             key="pplx-flash",
-            display_name="Perplexity Decider Flash v1.3",
-            model_id="perplexity/pplx-decider-flash-v1.3",
+            display_name="Perplexity Decider Flash v1.3 (free)",
+            model_id="perplexity/pplx-decider-flash-v1.3:free",
             provider="openrouter",
             family="decisions",
             endpoint="https://openrouter.ai/api/alpha/decisions",
             auth_env="OPENROUTER_API_KEY",
-            prompt_usd_per_token=None,
-            completion_usd_per_token=None,
+            prompt_usd_per_token=or_prompt("perplexity/pplx-decider-flash-v1.3:free", "decision_models"),
+            completion_usd_per_token=or_completion("perplexity/pplx-decider-flash-v1.3:free", "decision_models"),
             request_usd=Decimal("0"),
-            price_source="not listed; GET /api/v1/models/<id>/endpoints returned 0 endpoints",
-            price_found=False,
-            runnable_id_confirmed=False,
+            price_source="OpenRouter GET /api/v1/models?output_modalities=decisions (snapshot in catalog/)",
+            price_found=True,
+            runnable_id_confirmed=True,
             notes=[
-                f"The unsuffixed id has a model record but {pplx_flash_eps} endpoints, so it is not a confirmed runnable id.",
-                "The Decisions catalog lists perplexity/pplx-decider-flash-v1.3:free at $0 input and $0 output, with 1 Perplexity endpoint.",
-                "This harness does not silently substitute the :free id. A later run can target :free explicitly.",
+                f"Runnable id is the :free suffix. The unsuffixed id perplexity/pplx-decider-flash-v1.3 has a model record but {pplx_flash_unsuffixed_eps} endpoints.",
+                f"Confirmed {pplx_flash_free_eps} Perplexity endpoint at $0 input and $0 output.",
+                f"Canonical slug {dec['perplexity/pplx-decider-flash-v1.3:free'].get('canonical_slug')}.",
             ],
         ),
         ModelSpec(
             key="pplx-full",
-            display_name="Perplexity Decider v1.3",
-            model_id="perplexity/pplx-decider-v1.3",
+            display_name="Perplexity Decider v1.3 (free)",
+            model_id="perplexity/pplx-decider-v1.3:free",
             provider="openrouter",
             family="decisions",
             endpoint="https://openrouter.ai/api/alpha/decisions",
             auth_env="OPENROUTER_API_KEY",
-            prompt_usd_per_token=None,
-            completion_usd_per_token=None,
+            prompt_usd_per_token=or_prompt("perplexity/pplx-decider-v1.3:free", "decision_models"),
+            completion_usd_per_token=or_completion("perplexity/pplx-decider-v1.3:free", "decision_models"),
             request_usd=Decimal("0"),
-            price_source="not listed; GET /api/v1/models/<id>/endpoints returned 0 endpoints",
-            price_found=False,
-            runnable_id_confirmed=False,
+            price_source="OpenRouter GET /api/v1/models?output_modalities=decisions (snapshot in catalog/)",
+            price_found=True,
+            runnable_id_confirmed=True,
             notes=[
-                f"The unsuffixed id has a model record but {pplx_full_eps} endpoints, so it is not a confirmed runnable id.",
-                "The Decisions catalog lists perplexity/pplx-decider-v1.3:free at $0 input and $0 output, with 1 Perplexity endpoint.",
-                "This harness does not silently substitute the :free id. A later run can target :free explicitly.",
+                f"Runnable id is the :free suffix. The unsuffixed id perplexity/pplx-decider-v1.3 has a model record but {pplx_full_unsuffixed_eps} endpoints.",
+                f"Confirmed {pplx_full_free_eps} Perplexity endpoint at $0 input and $0 output.",
+                f"Canonical slug {dec['perplexity/pplx-decider-v1.3:free'].get('canonical_slug')}.",
             ],
         ),
         ModelSpec(
@@ -312,20 +316,41 @@ def registry(snapshot: dict[str, Any] | None = None) -> list[ModelSpec]:
         ModelSpec(
             key="bison",
             display_name="Baseten bison-1",
-            model_id="decision-models/baseten-bison-latest",
-            provider="baseten",
+            model_id="baseten/bison-1",
+            provider="openrouter",
             family="decisions",
-            endpoint="https://inference.baseten.co/v1/systemone",
-            auth_env="BASETEN_API_KEY",
-            prompt_usd_per_token=Decimal("0.0000001"),  # $0.10 / 1M
-            completion_usd_per_token=Decimal("0"),
+            endpoint="https://openrouter.ai/api/alpha/decisions",
+            auth_env="OPENROUTER_API_KEY",
+            prompt_usd_per_token=or_prompt("baseten/bison-1", "decision_models"),
+            completion_usd_per_token=or_completion("baseten/bison-1", "decision_models"),
             request_usd=Decimal("0"),
-            price_source="Baseten model card / HF baselabs/bison-1: $0.10 per 1M tokens. OpenRouter lists the same rate for baseten/bison-1, but this harness calls Baseten directly.",
+            price_source="OpenRouter GET /api/v1/models?output_modalities=decisions and GET /api/v1/models/baseten/bison-1/endpoints (snapshot in catalog/)",
             price_found=True,
             runnable_id_confirmed=True,
             notes=[
-                "API reference uses Authorization: Bearer $BASETEN_API_KEY; the model-library curl example uses Authorization: Api-Key. The adapter sends Bearer and can fall back to Api-Key.",
-                "Not called through OpenRouter even though baseten/bison-1 exists there.",
+                f"Canonical slug {dec['baseten/bison-1'].get('canonical_slug')}.",
+                f"One BaseTen endpoint (n={bison_eps}), catalog and endpoint price $0.10/1M in, $0 out. Matches Valar's claimed rate.",
+                "Called through OpenRouter Decisions, not the direct Baseten API.",
+            ],
+        ),
+        ModelSpec(
+            key="groundhog",
+            display_name="Baseten groundhog-1",
+            model_id="baseten/groundhog-1",
+            provider="openrouter",
+            family="decisions",
+            endpoint="https://openrouter.ai/api/alpha/decisions",
+            auth_env="OPENROUTER_API_KEY",
+            prompt_usd_per_token=or_prompt("baseten/groundhog-1", "decision_models"),
+            completion_usd_per_token=or_completion("baseten/groundhog-1", "decision_models"),
+            request_usd=Decimal("0"),
+            price_source="OpenRouter GET /api/v1/models?output_modalities=decisions and GET /api/v1/models/baseten/groundhog-1/endpoints (snapshot in catalog/)",
+            price_found=True,
+            runnable_id_confirmed=True,
+            notes=[
+                f"Canonical slug {dec['baseten/groundhog-1'].get('canonical_slug')}.",
+                f"One BaseTen endpoint (n={groundhog_eps}), catalog and endpoint price $0.035/1M in, $0 out. Matches Valar's claimed rate.",
+                "Called through OpenRouter Decisions, not the direct Baseten API.",
             ],
         ),
     ]

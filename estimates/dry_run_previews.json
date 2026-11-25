@@ -54,11 +54,11 @@
     },
     {
       "key": "pplx-flash",
-      "model_id": "perplexity/pplx-decider-flash-v1.3",
+      "model_id": "perplexity/pplx-decider-flash-v1.3:free",
       "endpoint": "https://openrouter.ai/api/alpha/decisions",
-      "blocked": "OpenRouter id 'perplexity/pplx-decider-flash-v1.3' was not confirmed as runnable (model record exists but the endpoints list is empty).",
+      "blocked": null,
       "sample_request_preview": {
-        "model": "perplexity/pplx-decider-flash-v1.3",
+        "model": "perplexity/pplx-decider-flash-v1.3:free",
         "state": "I really enjoyed this movie. As a movie lover and a Christian, I found this movie relatable and entertaining.",
         "questions": {
           "sentiment": {
@@ -80,11 +80,11 @@
     },
     {
       "key": "pplx-full",
-      "model_id": "perplexity/pplx-decider-v1.3",
+      "model_id": "perplexity/pplx-decider-v1.3:free",
       "endpoint": "https://openrouter.ai/api/alpha/decisions",
-      "blocked": "OpenRouter id 'perplexity/pplx-decider-v1.3' was not confirmed as runnable (model record exists but the endpoints list is empty).",
+      "blocked": null,
       "sample_request_preview": {
-        "model": "perplexity/pplx-decider-v1.3",
+        "model": "perplexity/pplx-decider-v1.3:free",
         "state": "I really enjoyed this movie. As a movie lover and a Christian, I found this movie relatable and entertaining.",
         "questions": {
           "sentiment": {
@@ -144,7 +144,7 @@
             }
           }
         },
-        "max_tokens": 64,
+        "max_tokens": 4096,
         "temperature": 0
       },
       "sample_token_approx_en": {
@@ -194,7 +194,7 @@
             }
           }
         },
-        "max_tokens": 64,
+        "max_tokens": 4096,
         "temperature": 0
       },
       "sample_token_approx_en": {
@@ -377,7 +377,7 @@
       "key": "sarvam",
       "model_id": "sarvam-prism",
       "endpoint": "https://api.sarvam.ai/v2/systemone",
-      "blocked": "SARVAM_API_KEY is not set in the current environment.",
+      "blocked": null,
       "sample_request_preview": {
         "model": "sarvam-prism",
         "state": "I really enjoyed this movie. As a movie lover and a Christian, I found this movie relatable and entertaining.",
@@ -401,11 +401,37 @@
     },
     {
       "key": "bison",
-      "model_id": "decision-models/baseten-bison-latest",
-      "endpoint": "https://inference.baseten.co/v1/systemone",
-      "blocked": "BASETEN_API_KEY is not set in the current environment.",
+      "model_id": "baseten/bison-1",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "blocked": null,
       "sample_request_preview": {
-        "model": "decision-models/baseten-bison-latest",
+        "model": "baseten/bison-1",
+        "state": "I really enjoyed this movie. As a movie lover and a Christian, I found this movie relatable and entertaining.",
+        "questions": {
+          "sentiment": {
+            "type": "choice",
+            "instructions": "Classify the sentiment of this product review toward the product or service.",
+            "criteria": {
+              "Positive": "The review expresses a positive sentiment toward the product or service.",
+              "Negative": "The review expresses a negative sentiment toward the product or service."
+            }
+          }
+        }
+      },
+      "sample_token_approx_en": {
+        "decisions_prompt_tokens": 82,
+        "chat_prompt_tokens": 132,
+        "assumed_structured_output_tokens": 5,
+        "review_tokens_only": 22
+      }
+    },
+    {
+      "key": "groundhog",
+      "model_id": "baseten/groundhog-1",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "blocked": null,
+      "sample_request_preview": {
+        "model": "baseten/groundhog-1",
         "state": "I really enjoyed this movie. As a movie lover and a Christian, I found this movie relatable and entertaining.",
         "questions": {
           "sentiment": {

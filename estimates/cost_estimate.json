@@ -79,8 +79,8 @@
     },
     {
       "key": "pplx-flash",
-      "display_name": "Perplexity Decider Flash v1.3",
-      "model_id": "perplexity/pplx-decider-flash-v1.3",
+      "display_name": "Perplexity Decider Flash v1.3 (free)",
+      "model_id": "perplexity/pplx-decider-flash-v1.3:free",
       "provider": "openrouter",
       "family": "decisions",
       "n_requests": 240,
@@ -92,28 +92,28 @@
         "hi": 8483,
         "ta": 9118
       },
-      "price_found": false,
-      "price_source": "not listed; GET /api/v1/models/<id>/endpoints returned 0 endpoints",
-      "runnable_id_confirmed": false,
-      "prompt_usd_per_1m": null,
-      "completion_usd_per_1m": null,
+      "price_found": true,
+      "price_source": "OpenRouter GET /api/v1/models?output_modalities=decisions (snapshot in catalog/)",
+      "runnable_id_confirmed": true,
+      "prompt_usd_per_1m": "0.00000000",
+      "completion_usd_per_1m": "0.00000000",
       "request_usd": "0.00000000",
       "notes": [
-        "The unsuffixed id has a model record but 0 endpoints, so it is not a confirmed runnable id.",
-        "The Decisions catalog lists perplexity/pplx-decider-flash-v1.3:free at $0 input and $0 output, with 1 Perplexity endpoint.",
-        "This harness does not silently substitute the :free id. A later run can target :free explicitly."
+        "Runnable id is the :free suffix. The unsuffixed id perplexity/pplx-decider-flash-v1.3 has a model record but 0 endpoints.",
+        "Confirmed 1 Perplexity endpoint at $0 input and $0 output.",
+        "Canonical slug perplexity/pplx-decider-flash-v1.3-20261112."
       ],
-      "prompt_usd": null,
-      "completion_usd": null,
-      "request_fees_usd": null,
-      "total_usd": null,
-      "estimate_complete": false,
-      "incomplete_reason": "No official USD list price, or the OpenRouter id has no priced endpoint."
+      "prompt_usd": "0.00000000",
+      "completion_usd": "0.00000000",
+      "request_fees_usd": "0.00000000",
+      "total_usd": "0.00000000",
+      "estimate_complete": true,
+      "incomplete_reason": null
     },
     {
       "key": "pplx-full",
-      "display_name": "Perplexity Decider v1.3",
-      "model_id": "perplexity/pplx-decider-v1.3",
+      "display_name": "Perplexity Decider v1.3 (free)",
+      "model_id": "perplexity/pplx-decider-v1.3:free",
       "provider": "openrouter",
       "family": "decisions",
       "n_requests": 240,
@@ -125,23 +125,23 @@
         "hi": 8483,
         "ta": 9118
       },
-      "price_found": false,
-      "price_source": "not listed; GET /api/v1/models/<id>/endpoints returned 0 endpoints",
-      "runnable_id_confirmed": false,
-      "prompt_usd_per_1m": null,
-      "completion_usd_per_1m": null,
+      "price_found": true,
+      "price_source": "OpenRouter GET /api/v1/models?output_modalities=decisions (snapshot in catalog/)",
+      "runnable_id_confirmed": true,
+      "prompt_usd_per_1m": "0.00000000",
+      "completion_usd_per_1m": "0.00000000",
       "request_usd": "0.00000000",
       "notes": [
-        "The unsuffixed id has a model record but 0 endpoints, so it is not a confirmed runnable id.",
-        "The Decisions catalog lists perplexity/pplx-decider-v1.3:free at $0 input and $0 output, with 1 Perplexity endpoint.",
-        "This harness does not silently substitute the :free id. A later run can target :free explicitly."
+        "Runnable id is the :free suffix. The unsuffixed id perplexity/pplx-decider-v1.3 has a model record but 0 endpoints.",
+        "Confirmed 1 Perplexity endpoint at $0 input and $0 output.",
+        "Canonical slug perplexity/pplx-decider-v1.3-20261112."
       ],
-      "prompt_usd": null,
-      "completion_usd": null,
-      "request_fees_usd": null,
-      "total_usd": null,
-      "estimate_complete": false,
-      "incomplete_reason": "No official USD list price, or the OpenRouter id has no priced endpoint."
+      "prompt_usd": "0.00000000",
+      "completion_usd": "0.00000000",
+      "request_fees_usd": "0.00000000",
+      "total_usd": "0.00000000",
+      "estimate_complete": true,
+      "incomplete_reason": null
     },
     {
       "key": "gemini",
@@ -358,8 +358,8 @@
     {
       "key": "bison",
       "display_name": "Baseten bison-1",
-      "model_id": "decision-models/baseten-bison-latest",
-      "provider": "baseten",
+      "model_id": "baseten/bison-1",
+      "provider": "openrouter",
       "family": "decisions",
       "n_requests": 240,
       "tokenizer": "o200k_base",
@@ -371,14 +371,15 @@
         "ta": 9118
       },
       "price_found": true,
-      "price_source": "Baseten model card / HF baselabs/bison-1: $0.10 per 1M tokens. OpenRouter lists the same rate for baseten/bison-1, but this harness calls Baseten directly.",
+      "price_source": "OpenRouter GET /api/v1/models?output_modalities=decisions and GET /api/v1/models/baseten/bison-1/endpoints (snapshot in catalog/)",
       "runnable_id_confirmed": true,
       "prompt_usd_per_1m": "0.10000000",
       "completion_usd_per_1m": "0.00000000",
       "request_usd": "0.00000000",
       "notes": [
-        "API reference uses Authorization: Bearer $BASETEN_API_KEY; the model-library curl example uses Authorization: Api-Key. The adapter sends Bearer and can fall back to Api-Key.",
-        "Not called through OpenRouter even though baseten/bison-1 exists there."
+        "Canonical slug baseten/bison-1-20261120.",
+        "One BaseTen endpoint (n=1), catalog and endpoint price $0.10/1M in, $0 out. Matches Valar's claimed rate.",
+        "Called through OpenRouter Decisions, not the direct Baseten API."
       ],
       "prompt_usd": "0.00246620",
       "completion_usd": "0.00000000",
@@ -386,25 +387,59 @@
       "total_usd": "0.00246620",
       "estimate_complete": true,
       "incomplete_reason": null
+    },
+    {
+      "key": "groundhog",
+      "display_name": "Baseten groundhog-1",
+      "model_id": "baseten/groundhog-1",
+      "provider": "openrouter",
+      "family": "decisions",
+      "n_requests": 240,
+      "tokenizer": "o200k_base",
+      "tokenizer_note": "tiktoken o200k_base is an approximation for all models. Decision-model counts are tokens of the compact JSON payload (state + questions). Chat counts include the system prompt, the review, and the json_schema. This is not the provider's billed tokenizer.",
+      "prompt_tokens_total": 24662,
+      "prompt_tokens_by_language": {
+        "en": 7061,
+        "hi": 8483,
+        "ta": 9118
+      },
+      "price_found": true,
+      "price_source": "OpenRouter GET /api/v1/models?output_modalities=decisions and GET /api/v1/models/baseten/groundhog-1/endpoints (snapshot in catalog/)",
+      "runnable_id_confirmed": true,
+      "prompt_usd_per_1m": "0.03500000",
+      "completion_usd_per_1m": "0.00000000",
+      "request_usd": "0.00000000",
+      "notes": [
+        "Canonical slug baseten/groundhog-1-20261120.",
+        "One BaseTen endpoint (n=1), catalog and endpoint price $0.035/1M in, $0 out. Matches Valar's claimed rate.",
+        "Called through OpenRouter Decisions, not the direct Baseten API."
+      ],
+      "prompt_usd": "0.00086317",
+      "completion_usd": "0.00000000",
+      "request_fees_usd": "0.00000000",
+      "total_usd": "0.00086317",
+      "estimate_complete": true,
+      "incomplete_reason": null
     }
   ],
   "totals": {
-    "usd_complete_estimates_only": "0.06795981",
-    "usd_prompt_only_sum_of_priced_models": "0.18963881",
-    "usd_headline_complete_plus_prompt_of_incomplete": "0.19596881",
+    "usd_complete_estimates_only": "0.06882298",
+    "usd_prompt_only_sum_of_priced_models": "0.19050198",
+    "usd_headline_complete_plus_prompt_of_incomplete": "0.19683198",
     "headline_includes": [
       "typesafe/jev-1.14",
       "microsoft/microsoft-decision-1.1",
+      "perplexity/pplx-decider-flash-v1.3:free",
+      "perplexity/pplx-decider-v1.3:free",
       "openai/gpt-6-luna",
       "qwen/qwen4-max",
       "deepseek/deepseek-v4.1-flash-1017",
-      "decision-models/baseten-bison-latest",
+      "baseten/bison-1",
+      "baseten/groundhog-1",
       "google/gemini-4-hydrogen",
       "openai/gpt-6.2-sol"
     ],
     "excluded_from_usd_total": [
-      "perplexity/pplx-decider-flash-v1.3",
-      "perplexity/pplx-decider-v1.3",
       "sarvam-prism"
     ],
     "note": "The headline total is the sum of complete USD estimates plus the prompt-only cost of priced models whose reasoning tokens could not be estimated. It excludes models with no official USD price. It is not a cap and not a billed amount."

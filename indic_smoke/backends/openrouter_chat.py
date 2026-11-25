@@ -22,7 +22,11 @@ def build_request(spec: ModelSpec, text: str) -> dict[str, Any]:
         "model": spec.model_id,
         "messages": llm_messages(text),
         "response_format": llm_response_format(),
-        "max_tokens": 64,
+        "max_tokens": (
+            4096
+            if (spec.reasoning or {}).get("mandatory")
+            else 64
+        ),
         "temperature": 0,
     }
     if spec.reasoning_effort:
@@ -97,6 +101,21 @@ def usage_cost_usd(payload: dict[str, Any]) -> float | None:
     return None
 
 
+
+def _http_error(status: int, payload: dict[str, Any] | None) -> str:
+    detail = ""
+    if isinstance(payload, dict):
+        err = payload.get("error")
+        if isinstance(err, dict):
+            parts = [str(err.get(k)) for k in ("code", "type", "message") if err.get(k)]
+            detail = " ".join(parts)
+        elif isinstance(err, str):
+            detail = err[:500]
+        elif payload.get("message"):
+            detail = str(payload["message"])[:500]
+    return f"http {status}" + (f": {detail}" if detail else "")
+
+
 def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
     key = env_key(spec.auth_env)
     if not key:
@@ -107,6 +126,7 @@ def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
         spec.endpoint,
         headers={"Authorization": f"Bearer {key}"},
         body=build_request(spec, text),
+        timeout=180.0,
     )
     latency_ms = (time.perf_counter() - t0) * 1000.0
     if status != 200:
@@ -115,12 +135,15 @@ def infer(spec: ModelSpec, text: str) -> dict[str, Any]:
             "probs": None,
             "latency_ms": latency_ms,
             "cost_usd": usage_cost_usd(payload),
-            "error": f"http {status}",
+            "error": _http_error(status, payload),
             "http_status": status,
+            "usage": payload.get("usage") if isinstance(payload, dict) else None,
+            "model": payload.get("model") if isinstance(payload, dict) else None,
         }
     parsed = parse_answer(payload, spec.supports_logprobs)
     parsed["latency_ms"] = latency_ms
     parsed["cost_usd"] = usage_cost_usd(payload)
     parsed["http_status"] = status
     parsed["usage"] = payload.get("usage")
+    parsed["model"] = payload.get("model")
     return parsed
